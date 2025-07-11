@@ -1,0 +1,21 @@
+{
+  "editor.renderFinalNewline": "on",
+  "editor.trimAutoWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/.swiftpm": true,
+    "**/.build": true,
+    "**/node_modules": true,
+    "tmp": true,
+    "Carthage": true,
+    "vendor": true
+  },
+  "[swift]": {
+    "editor.defaultFormatter": "sweetpad.sweetpad",
+    "editor.formatOnSave": true
+  },
+  "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB"
+}
