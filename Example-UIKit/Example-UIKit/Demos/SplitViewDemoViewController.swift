@@ -195,8 +195,8 @@ class DemoTableViewCell: UITableViewCell {
 
     // Layout constraints
     mainStackView.snp.makeConstraints { make in
-      make.leading.trailing.equalTo(contentView).inset(grid(4))
-      make.top.bottom.equalTo(contentView).inset(grid(3))
+      make.horizontalEdges.equalTo(contentView.layoutMarginsGuide)
+      make.verticalEdges.equalTo(contentView).inset(grid(3))
     }
   }
 

@@ -27,6 +27,7 @@ class ListViewController: UIViewController {
     title = "List"
 
     let tableView = UITableView(frame: .zero, style: .plain)
+    tableView.cellLayoutMarginsFollowReadableWidth = true
     tableView.delegate = self
     tableView.dataSource = self
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
@@ -35,8 +36,7 @@ class ListViewController: UIViewController {
     view.addSubview(tableView)
 
     tableView.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide)
-      make.leading.trailing.bottom.equalTo(view)
+      make.edges.equalTo(view.safeAreaLayoutGuide)
     }
   }
 }
@@ -76,10 +76,9 @@ class DetailTableViewController: UITableViewController {
     view.backgroundColor = .systemGroupedBackground
     title = "Detail"
 
+    tableView.cellLayoutMarginsFollowReadableWidth = true
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DetailCell")
     tableView.register(DetailHeaderCell.self, forCellReuseIdentifier: "HeaderCell")
-
-    // Configure cells to show detail text
     tableView.register(DetailInfoCell.self, forCellReuseIdentifier: "InfoCell")
   }
 
@@ -224,19 +223,19 @@ class DetailHeaderCell: UITableViewCell {
     titleLabel.numberOfLines = 0
     titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-    contentView.addSubview(iconImageView)
-    contentView.addSubview(titleLabel)
-
     iconImageView.snp.makeConstraints { make in
-      make.top.equalTo(contentView).inset(grid(5))
-      make.centerX.equalTo(contentView)
       make.width.height.equalTo(60)
     }
 
-    titleLabel.snp.makeConstraints { make in
-      make.top.equalTo(iconImageView.snp.bottom).inset(grid(4))
-      make.leading.equalTo(contentView).inset(grid(5))
-      make.trailing.bottom.equalTo(contentView).inset(grid(5))
+    let stack = UIStackView(arrangedSubviews: [iconImageView, titleLabel])
+    stack.spacing = grid(4)
+    stack.axis = .vertical
+    stack.alignment = .center
+
+    contentView.addSubview(stack)
+    stack.snp.makeConstraints { make in
+      make.horizontalEdges.equalTo(contentView.layoutMarginsGuide)
+      make.verticalEdges.equalTo(contentView).inset(grid(5))
     }
   }
 
@@ -301,27 +300,21 @@ class DetailInfoCell: UITableViewCell {
     valueLabel.textAlignment = .right
     valueLabel.translatesAutoresizingMaskIntoConstraints = false
 
-    contentView.addSubview(titleLabel)
-    contentView.addSubview(valueLabel)
+    let stack = UIStackView(arrangedSubviews: [titleLabel, valueLabel])
+    stack.spacing = grid(2)
+    stack.axis = .horizontal
+    stack.distribution = .fill
 
-    titleLabel.snp.makeConstraints { make in
-      make.leading.equalTo(contentView).inset(grid(4))
-      make.centerY.equalTo(contentView)
-      make.trailing.equalTo(valueLabel.snp.leading).inset(grid(2))
-    }
-
-    valueLabel.snp.makeConstraints { make in
-      make.trailing.equalTo(contentView).inset(grid(4))
-      make.centerY.equalTo(contentView)
-      make.width.lessThanOrEqualTo(contentView).multipliedBy(0.5)
-    }
-
-    contentView.snp.makeConstraints { make in
-      make.height.greaterThanOrEqualTo(44)
+    contentView.addSubview(stack)
+    stack.snp.makeConstraints { make in
+      make.horizontalEdges.equalTo(contentView.layoutMarginsGuide)
+      make.verticalEdges.equalTo(contentView).inset(grid(2))
+      make.height.greaterThanOrEqualTo(grid(11))
     }
 
     titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     valueLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    valueLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
   }
 
   func configure(title: String, value: String) {
