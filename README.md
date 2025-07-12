@@ -8,13 +8,13 @@ A powerful UIKit component that enables seamless integration of split view contr
 
 ## Features
 
-✅ **Seamless Navigation Integration** - Push split views onto existing navigation stacks
-✅ **Automatic Back Button Handling** - Smart back button mirroring maintains navigation consistency
-✅ **Adaptive Layout Support** - Works across all device sizes and orientations
-✅ **Customizable Display Options** - Configure split behavior and display modes
-✅ **Pure UIKit Implementation** - No dependencies, works with existing UIKit apps
-✅ **iOS 26+ Inspector Support** - Three-column layouts with inspector panes
-✅ **iOS 18 Bug Workarounds** - Built-in fixes for known platform issues
+- ✅ **Seamless Navigation Integration** - Push split views onto existing navigation stacks
+- ✅ **Automatic Back Button Handling** - Smart back button mirroring maintains navigation consistency
+- ✅ **Adaptive Layout Support** - Works across all device sizes and orientations
+- ✅ **Customizable Display Options** - Configure split behavior and display modes
+- ✅ **Pure UIKit Implementation** - No dependencies, works with existing UIKit apps
+- ✅ **iOS 26+ Inspector Support** - Three-column layouts with inspector panes
+- ✅ **iOS 18 Bug Workarounds** - Built-in fixes for known platform issues
 
 ## Requirements
 
