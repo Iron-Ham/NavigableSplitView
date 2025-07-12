@@ -1,5 +1,5 @@
 //
-//  DemoViewControllers.swift
+//  ListDetailDemoViewControllers.swift
 //  Example-UIKit
 //
 //  Created by Hesham Salman on 7/11/25.
@@ -7,90 +7,6 @@
 
 import SnapKit
 import UIKit
-
-// MARK: - Basic Demo View Controllers
-
-class BasicPrimaryViewController: UIViewController {
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupUI()
-  }
-
-  private func setupUI() {
-    view.backgroundColor = .systemBackground
-    title = "Primary View"
-
-    let label = UILabel()
-    label.text = "This is the Primary View"
-    label.font = UIFont.preferredFont(forTextStyle: .title1)
-    label.textAlignment = .center
-    label.translatesAutoresizingMaskIntoConstraints = false
-
-    let descriptionLabel = UILabel()
-    descriptionLabel.text =
-      "The primary view is typically used for navigation or as a sidebar in split view layouts."
-    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .body)
-    descriptionLabel.textColor = .secondaryLabel
-    descriptionLabel.textAlignment = .center
-    descriptionLabel.numberOfLines = 0
-    descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    view.addSubview(label)
-    view.addSubview(descriptionLabel)
-
-    label.snp.makeConstraints { make in
-      make.centerX.equalTo(view)
-      make.centerY.equalTo(view).offset(-20)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-
-    descriptionLabel.snp.makeConstraints { make in
-      make.top.equalTo(label.snp.bottom).offset(16)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-  }
-}
-
-class BasicSecondaryViewController: UIViewController {
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupUI()
-  }
-
-  private func setupUI() {
-    view.backgroundColor = .systemGroupedBackground
-    title = "Secondary View"
-
-    let label = UILabel()
-    label.text = "This is the Secondary View"
-    label.font = UIFont.preferredFont(forTextStyle: .title1)
-    label.textAlignment = .center
-    label.translatesAutoresizingMaskIntoConstraints = false
-
-    let descriptionLabel = UILabel()
-    descriptionLabel.text =
-      "The secondary view is typically used to display detailed content or as the main content area."
-    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .body)
-    descriptionLabel.textColor = .secondaryLabel
-    descriptionLabel.textAlignment = .center
-    descriptionLabel.numberOfLines = 0
-    descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    view.addSubview(label)
-    view.addSubview(descriptionLabel)
-
-    label.snp.makeConstraints { make in
-      make.centerX.equalTo(view)
-      make.centerY.equalTo(view).offset(-20)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-
-    descriptionLabel.snp.makeConstraints { make in
-      make.top.equalTo(label.snp.bottom).offset(16)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-  }
-}
 
 // MARK: - List-Detail Demo View Controllers
 
@@ -312,16 +228,15 @@ class DetailHeaderCell: UITableViewCell {
     contentView.addSubview(titleLabel)
 
     iconImageView.snp.makeConstraints { make in
-      make.top.equalTo(contentView).offset(20)
+      make.top.equalTo(contentView).inset(grid(5))
       make.centerX.equalTo(contentView)
       make.width.height.equalTo(60)
     }
 
     titleLabel.snp.makeConstraints { make in
-      make.top.equalTo(iconImageView.snp.bottom).offset(16)
-      make.leading.equalTo(contentView).offset(20)
-      make.trailing.equalTo(contentView).offset(-20)
-      make.bottom.equalTo(contentView).offset(-20)
+      make.top.equalTo(iconImageView.snp.bottom).inset(grid(4))
+      make.leading.equalTo(contentView).inset(grid(5))
+      make.trailing.bottom.equalTo(contentView).inset(grid(5))
     }
   }
 
@@ -390,13 +305,13 @@ class DetailInfoCell: UITableViewCell {
     contentView.addSubview(valueLabel)
 
     titleLabel.snp.makeConstraints { make in
-      make.leading.equalTo(contentView).offset(16)
+      make.leading.equalTo(contentView).inset(grid(4))
       make.centerY.equalTo(contentView)
-      make.trailing.equalTo(valueLabel.snp.leading).offset(-8)
+      make.trailing.equalTo(valueLabel.snp.leading).inset(grid(2))
     }
 
     valueLabel.snp.makeConstraints { make in
-      make.trailing.equalTo(contentView).offset(-16)
+      make.trailing.equalTo(contentView).inset(grid(4))
       make.centerY.equalTo(contentView)
       make.width.lessThanOrEqualTo(contentView).multipliedBy(0.5)
     }
@@ -412,178 +327,6 @@ class DetailInfoCell: UITableViewCell {
   func configure(title: String, value: String) {
     titleLabel.text = title
     valueLabel.text = value
-  }
-}
-
-// MARK: - Custom Layout Demo View Controllers
-
-class CustomPrimaryViewController: UIViewController {
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupUI()
-  }
-
-  private func setupUI() {
-    view.backgroundColor = .systemPurple.withAlphaComponent(0.1)
-    title = "Custom Primary"
-
-    let label = UILabel()
-    label.text = "Custom Styled Primary View"
-    label.font = UIFont.preferredFont(forTextStyle: .title1)
-    label.textColor = .systemPurple
-    label.textAlignment = .center
-    label.translatesAutoresizingMaskIntoConstraints = false
-
-    let descriptionLabel = UILabel()
-    descriptionLabel.text =
-      "This demonstrates custom styling and layout options for the primary view."
-    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .body)
-    descriptionLabel.textColor = .systemPurple
-    descriptionLabel.textAlignment = .center
-    descriptionLabel.numberOfLines = 0
-    descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    view.addSubview(label)
-    view.addSubview(descriptionLabel)
-
-    label.snp.makeConstraints { make in
-      make.centerX.equalTo(view)
-      make.centerY.equalTo(view).offset(-20)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-
-    descriptionLabel.snp.makeConstraints { make in
-      make.top.equalTo(label.snp.bottom).offset(16)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-  }
-}
-
-class CustomSecondaryViewController: UIViewController {
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupUI()
-  }
-
-  private func setupUI() {
-    view.backgroundColor = .systemOrange.withAlphaComponent(0.1)
-    title = "Custom Secondary"
-
-    let label = UILabel()
-    label.text = "Custom Styled Secondary View"
-    label.font = UIFont.preferredFont(forTextStyle: .title1)
-    label.textColor = .systemOrange
-    label.textAlignment = .center
-    label.translatesAutoresizingMaskIntoConstraints = false
-
-    let descriptionLabel = UILabel()
-    descriptionLabel.text =
-      "This demonstrates custom styling and layout options for the secondary view."
-    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .body)
-    descriptionLabel.textColor = .systemOrange
-    descriptionLabel.textAlignment = .center
-    descriptionLabel.numberOfLines = 0
-    descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    view.addSubview(label)
-    view.addSubview(descriptionLabel)
-
-    label.snp.makeConstraints { make in
-      make.centerX.equalTo(view)
-      make.centerY.equalTo(view).offset(-20)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-
-    descriptionLabel.snp.makeConstraints { make in
-      make.top.equalTo(label.snp.bottom).offset(16)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-  }
-}
-
-// MARK: - Adaptive Demo View Controllers
-
-class AdaptivePrimaryViewController: UIViewController {
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupUI()
-  }
-
-  private func setupUI() {
-    view.backgroundColor = .systemTeal.withAlphaComponent(0.1)
-    title = "Adaptive Primary"
-
-    let label = UILabel()
-    label.text = "Adaptive Design Primary"
-    label.font = UIFont.preferredFont(forTextStyle: .title1)
-    label.textColor = .systemTeal
-    label.textAlignment = .center
-    label.translatesAutoresizingMaskIntoConstraints = false
-
-    let descriptionLabel = UILabel()
-    descriptionLabel.text =
-      "This view demonstrates how the split view adapts to different screen sizes and orientations. Try rotating your device or resizing the window."
-    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .body)
-    descriptionLabel.textColor = .systemTeal
-    descriptionLabel.textAlignment = .center
-    descriptionLabel.numberOfLines = 0
-    descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    view.addSubview(label)
-    view.addSubview(descriptionLabel)
-
-    label.snp.makeConstraints { make in
-      make.centerX.equalTo(view)
-      make.centerY.equalTo(view).offset(-20)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-
-    descriptionLabel.snp.makeConstraints { make in
-      make.top.equalTo(label.snp.bottom).offset(16)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-  }
-}
-
-class AdaptiveSecondaryViewController: UIViewController {
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupUI()
-  }
-
-  private func setupUI() {
-    view.backgroundColor = .systemIndigo.withAlphaComponent(0.1)
-    title = "Adaptive Secondary"
-
-    let label = UILabel()
-    label.text = "Adaptive Design Secondary"
-    label.font = UIFont.preferredFont(forTextStyle: .title1)
-    label.textColor = .systemIndigo
-    label.textAlignment = .center
-    label.translatesAutoresizingMaskIntoConstraints = false
-
-    let descriptionLabel = UILabel()
-    descriptionLabel.text =
-      "Watch how this secondary view changes its layout and behavior based on the available screen space."
-    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .body)
-    descriptionLabel.textColor = .systemIndigo
-    descriptionLabel.textAlignment = .center
-    descriptionLabel.numberOfLines = 0
-    descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    view.addSubview(label)
-    view.addSubview(descriptionLabel)
-
-    label.snp.makeConstraints { make in
-      make.centerX.equalTo(view)
-      make.centerY.equalTo(view).offset(-20)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
-
-    descriptionLabel.snp.makeConstraints { make in
-      make.top.equalTo(label.snp.bottom).offset(16)
-      make.leading.trailing.equalTo(view.readableContentGuide)
-    }
   }
 }
 

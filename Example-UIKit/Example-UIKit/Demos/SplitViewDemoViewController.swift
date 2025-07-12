@@ -30,7 +30,7 @@ class SplitViewDemoViewController: UIViewController {
   private lazy var demoItems: [DemoItem] = [
     DemoItem(
       title: "Basic Split View",
-      description: "Simple primary and secondary view configuration",
+      description: "Simple primary, secondary, and inspector view configuration (iOS 26+)",
       iconName: "rectangle.split.2x1",
       action: { [weak self] in self?.basicDemoTapped() }
     ),
@@ -39,18 +39,6 @@ class SplitViewDemoViewController: UIViewController {
       description: "Classic iOS navigation pattern with list and detail views",
       iconName: "sidebar.left",
       action: { [weak self] in self?.listDetailTapped() }
-    ),
-    DemoItem(
-      title: "Custom Layout Options",
-      description: "Explore different display modes and split behaviors",
-      iconName: "rectangle.split.3x1",
-      action: { [weak self] in self?.customLayoutTapped() }
-    ),
-    DemoItem(
-      title: "Adaptive Design",
-      description: "See how the split view adapts to different screen sizes",
-      iconName: "ipad.landscape.and.iphone",
-      action: { [weak self] in self?.adaptiveTapped() }
     ),
   ]
 
@@ -67,7 +55,7 @@ class SplitViewDemoViewController: UIViewController {
 
     // Layout constraints
     tableView.snp.makeConstraints { make in
-      make.edges.equalTo(view.safeAreaLayoutGuide)
+      make.edges.equalToSuperview()
     }
   }
 
@@ -80,6 +68,13 @@ class SplitViewDemoViewController: UIViewController {
       secondary: secondaryVC
     )
 
+    // Add inspector view on iOS 26+ using the public splitVC property
+    if #available(iOS 26.0, *) {
+      let inspectorVC = BasicInspectorViewController()
+      splitViewController.splitVC.setViewController(inspectorVC, for: .inspector)
+      splitViewController.splitVC.show(.inspector)
+    }
+
     navigationController?.pushViewController(splitViewController, animated: true)
   }
 
@@ -90,30 +85,6 @@ class SplitViewDemoViewController: UIViewController {
     let splitViewController = NavigableSplitViewController(
       primary: listVC,
       secondary: detailVC
-    )
-
-    navigationController?.pushViewController(splitViewController, animated: true)
-  }
-
-  private func customLayoutTapped() {
-    let customPrimaryVC = CustomPrimaryViewController()
-    let customSecondaryVC = CustomSecondaryViewController()
-
-    let splitViewController = NavigableSplitViewController(
-      primary: customPrimaryVC,
-      secondary: customSecondaryVC
-    )
-
-    navigationController?.pushViewController(splitViewController, animated: true)
-  }
-
-  private func adaptiveTapped() {
-    let adaptivePrimaryVC = AdaptivePrimaryViewController()
-    let adaptiveSecondaryVC = AdaptiveSecondaryViewController()
-
-    let splitViewController = NavigableSplitViewController(
-      primary: adaptivePrimaryVC,
-      secondary: adaptiveSecondaryVC
     )
 
     navigationController?.pushViewController(splitViewController, animated: true)
@@ -224,10 +195,8 @@ class DemoTableViewCell: UITableViewCell {
 
     // Layout constraints
     mainStackView.snp.makeConstraints { make in
-      make.leading.equalTo(contentView).offset(grid(4))
-      make.trailing.equalTo(contentView).offset(-grid(4))
-      make.top.equalTo(contentView).offset(grid(3))
-      make.bottom.equalTo(contentView).offset(-grid(3))
+      make.leading.trailing.equalTo(contentView).inset(grid(4))
+      make.top.bottom.equalTo(contentView).inset(grid(3))
     }
   }
 

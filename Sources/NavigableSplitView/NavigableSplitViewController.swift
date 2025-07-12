@@ -34,7 +34,9 @@ public class NavigableSplitViewController: UIViewController {
     splitVC.viewController(for: .inspector)
   }
 
-  private let splitVC: CustomUISplitViewController
+  private let _splitVC: CustomUISplitViewController
+
+  public var splitVC: UISplitViewController { _splitVC }
 
   var isCompact: Bool {
     splitVC.isCollapsed
@@ -74,12 +76,10 @@ public class NavigableSplitViewController: UIViewController {
     primary: UIViewController,
     secondary: UIViewController?
   ) {
-    self.splitVC = CustomUISplitViewController(style: .doubleColumn)
+    self._splitVC = CustomUISplitViewController(style: .doubleColumn)
+    super.init(nibName: nil, bundle: nil)
     splitVC.preferredDisplayMode = .oneBesideSecondary
     splitVC.preferredSplitBehavior = .tile
-
-    super.init(nibName: nil, bundle: nil)
-
     splitVC.setViewController(primary, for: .primary)
     // Possible iOS 26 Beta Bug:
     // This must be deferred until after `viewDidAppear`, or we will end up in an infinite
