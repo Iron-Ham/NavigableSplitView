@@ -11,6 +11,49 @@ import UIKit
 
 class SplitViewDemoViewController: UIViewController {
 
+  private lazy var tableView: UITableView = {
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    tableView.delegate = self
+    tableView.dataSource = self
+    tableView.register(DemoTableViewCell.self, forCellReuseIdentifier: "DemoCell")
+    tableView.cellLayoutMarginsFollowReadableWidth = true
+    return tableView
+  }()
+
+  struct DemoItem {
+    let title: String
+    let description: String
+    let iconName: String
+    let action: () -> Void
+  }
+
+  private lazy var demoItems: [DemoItem] = [
+    DemoItem(
+      title: "Basic Split View",
+      description: "Simple primary and secondary view configuration",
+      iconName: "rectangle.split.2x1",
+      action: { [weak self] in self?.basicDemoTapped() }
+    ),
+    DemoItem(
+      title: "List-Detail Pattern",
+      description: "Classic iOS navigation pattern with list and detail views",
+      iconName: "sidebar.left",
+      action: { [weak self] in self?.listDetailTapped() }
+    ),
+    DemoItem(
+      title: "Custom Layout Options",
+      description: "Explore different display modes and split behaviors",
+      iconName: "rectangle.split.3x1",
+      action: { [weak self] in self?.customLayoutTapped() }
+    ),
+    DemoItem(
+      title: "Adaptive Design",
+      description: "See how the split view adapts to different screen sizes",
+      iconName: "ipad.landscape.and.iphone",
+      action: { [weak self] in self?.adaptiveTapped() }
+    ),
+  ]
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
@@ -20,178 +63,15 @@ class SplitViewDemoViewController: UIViewController {
     view.backgroundColor = .systemBackground
     title = "Split View Demo"
 
-    let scrollView = UIScrollView()
-    view.addSubview(scrollView)
-
-    // Main content stack view
-    let mainStackView = UIStackView()
-    mainStackView.axis = .vertical
-    mainStackView.spacing = grid(4)
-    mainStackView.alignment = .fill
-    scrollView.addSubview(mainStackView)
-
-    // Header section
-    let headerStackView = UIStackView()
-    headerStackView.axis = .vertical
-    headerStackView.spacing = grid(4)
-    headerStackView.alignment = .fill
-
-    let headerLabel = UILabel()
-    headerLabel.text = "NavigableSplitView Demos"
-    headerLabel.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-    headerLabel.textAlignment = .center
-
-    let descriptionLabel = UILabel()
-    descriptionLabel.text =
-      "Explore different configurations and use cases of the NavigableSplitView component."
-    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .body)
-    descriptionLabel.textColor = .secondaryLabel
-    descriptionLabel.textAlignment = .center
-    descriptionLabel.numberOfLines = 0
-
-    headerStackView.addArrangedSubview(headerLabel)
-    headerStackView.addArrangedSubview(descriptionLabel)
-
-    // Demo buttons stack view
-    let buttonsStackView = UIStackView()
-    buttonsStackView.axis = .vertical
-    buttonsStackView.spacing = grid(4)
-    buttonsStackView.alignment = .fill
-
-    let basicDemoButton = createDemoButton(
-      title: "Basic Split View",
-      description: "Simple primary and secondary view configuration",
-      iconName: "rectangle.split.2x1",
-      action: #selector(basicDemoTapped)
-    )
-
-    let listDetailButton = createDemoButton(
-      title: "List-Detail Pattern",
-      description: "Classic iOS navigation pattern with list and detail views",
-      iconName: "sidebar.left",
-      action: #selector(listDetailTapped)
-    )
-
-    let customLayoutButton = createDemoButton(
-      title: "Custom Layout Options",
-      description: "Explore different display modes and split behaviors",
-      iconName: "rectangle.split.3x1",
-      action: #selector(customLayoutTapped)
-    )
-
-    let adaptiveButton = createDemoButton(
-      title: "Adaptive Design",
-      description: "See how the split view adapts to different screen sizes",
-      iconName: "ipad.landscape.and.iphone",
-      action: #selector(adaptiveTapped)
-    )
-
-    [basicDemoButton, listDetailButton, customLayoutButton, adaptiveButton].forEach {
-      buttonsStackView.addArrangedSubview($0)
-    }
-
-    // Add header spacer
-    let headerSpacer = UIView()
-    headerSpacer.snp.makeConstraints { make in
-      make.height.equalTo(grid(3))
-    }
-
-    mainStackView.addArrangedSubview(headerStackView)
-    mainStackView.addArrangedSubview(headerSpacer)
-    mainStackView.addArrangedSubview(buttonsStackView)
+    view.addSubview(tableView)
 
     // Layout constraints
-    scrollView.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide)
-      make.leading.trailing.bottom.equalTo(view)
-    }
-
-    mainStackView.snp.makeConstraints { make in
-      make.top.equalTo(scrollView).offset(grid(5))
-      make.leading.trailing.equalTo(view.readableContentGuide)
-      make.bottom.equalTo(scrollView).offset(-grid(8))
-      make.width.equalTo(view.readableContentGuide)
+    tableView.snp.makeConstraints { make in
+      make.edges.equalTo(view.safeAreaLayoutGuide)
     }
   }
 
-  private func createDemoButton(
-    title: String, description: String, iconName: String, action: Selector
-  ) -> UIButton {
-    let button = UIButton(type: .system)
-    button.backgroundColor = .systemBackground
-    button.layer.cornerRadius = grid(3)
-    button.layer.borderWidth = 1
-    button.layer.borderColor = UIColor.systemGray4.cgColor
-
-    // Main horizontal stack view
-    let mainStackView = UIStackView()
-    mainStackView.axis = .horizontal
-    mainStackView.spacing = grid(4)
-    mainStackView.alignment = .center
-    mainStackView.isUserInteractionEnabled = false
-    button.addSubview(mainStackView)
-
-    // Icon
-    let iconImageView = UIImageView()
-    iconImageView.image = UIImage(systemName: iconName)
-    iconImageView.tintColor = .systemBlue
-    iconImageView.contentMode = .scaleAspectFit
-    iconImageView.snp.makeConstraints { make in
-      make.size.equalTo(grid(8))
-    }
-
-    // Text content stack view
-    let textStackView = UIStackView()
-    textStackView.axis = .vertical
-    textStackView.spacing = grid(1)
-    textStackView.alignment = .leading
-
-    let titleLabel = UILabel()
-    titleLabel.text = title
-    titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-    titleLabel.textColor = .label
-
-    let descriptionLabel = UILabel()
-    descriptionLabel.text = description
-    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-    descriptionLabel.textColor = .secondaryLabel
-    descriptionLabel.numberOfLines = 0
-
-    textStackView.addArrangedSubview(titleLabel)
-    textStackView.addArrangedSubview(descriptionLabel)
-
-    // Chevron
-    let chevronImageView = UIImageView()
-    chevronImageView.image = UIImage(systemName: "chevron.right")
-    chevronImageView.tintColor = .systemGray3
-    chevronImageView.contentMode = .scaleAspectFit
-    chevronImageView.snp.makeConstraints { make in
-      make.width.equalTo(grid(3))
-      make.height.equalTo(grid(5))
-    }
-
-    mainStackView.addArrangedSubview(iconImageView)
-    mainStackView.addArrangedSubview(textStackView)
-    mainStackView.addArrangedSubview(chevronImageView)
-
-    // Layout constraints
-    button.snp.makeConstraints { make in
-      make.height.greaterThanOrEqualTo(grid(20))
-    }
-
-    mainStackView.snp.makeConstraints { make in
-      make.leading.equalTo(button).offset(grid(4))
-      make.trailing.equalTo(button).offset(-grid(4))
-      make.top.equalTo(button).offset(grid(4))
-      make.bottom.equalTo(button).offset(-grid(4))
-    }
-
-    button.addTarget(self, action: action, for: .touchUpInside)
-
-    return button
-  }
-
-  @objc private func basicDemoTapped() {
+  private func basicDemoTapped() {
     let primaryVC = BasicPrimaryViewController()
     let secondaryVC = BasicSecondaryViewController()
 
@@ -203,7 +83,7 @@ class SplitViewDemoViewController: UIViewController {
     navigationController?.pushViewController(splitViewController, animated: true)
   }
 
-  @objc private func listDetailTapped() {
+  private func listDetailTapped() {
     let listVC = ListViewController()
     let detailVC = DetailTableViewController(style: .insetGrouped)
 
@@ -215,7 +95,7 @@ class SplitViewDemoViewController: UIViewController {
     navigationController?.pushViewController(splitViewController, animated: true)
   }
 
-  @objc private func customLayoutTapped() {
+  private func customLayoutTapped() {
     let customPrimaryVC = CustomPrimaryViewController()
     let customSecondaryVC = CustomSecondaryViewController()
 
@@ -227,7 +107,7 @@ class SplitViewDemoViewController: UIViewController {
     navigationController?.pushViewController(splitViewController, animated: true)
   }
 
-  @objc private func adaptiveTapped() {
+  private func adaptiveTapped() {
     let adaptivePrimaryVC = AdaptivePrimaryViewController()
     let adaptiveSecondaryVC = AdaptiveSecondaryViewController()
 
@@ -237,5 +117,123 @@ class SplitViewDemoViewController: UIViewController {
     )
 
     navigationController?.pushViewController(splitViewController, animated: true)
+  }
+}
+
+// MARK: - UITableViewDataSource
+extension SplitViewDemoViewController: UITableViewDataSource {
+
+  func numberOfSections(in tableView: UITableView) -> Int {
+    return 2
+  }
+
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    if section == 0 {
+      return 0  // Header section with no rows
+    }
+    return demoItems.count
+  }
+
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell =
+      tableView.dequeueReusableCell(withIdentifier: "DemoCell", for: indexPath)
+      as! DemoTableViewCell
+    let demoItem = demoItems[indexPath.row]
+    cell.configure(with: demoItem)
+    return cell
+  }
+
+  func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    if section == 0 {
+      return "NavigableSplitView Demos"
+    }
+    return "Demo Options"
+  }
+
+  func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    if section == 0 {
+      return "Explore different configurations and use cases of the NavigableSplitView component."
+    }
+    return nil
+  }
+}
+
+// MARK: - UITableViewDelegate
+extension SplitViewDemoViewController: UITableViewDelegate {
+
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+    let demoItem = demoItems[indexPath.row]
+    demoItem.action()
+  }
+}
+
+// MARK: - Custom Table View Cell
+class DemoTableViewCell: UITableViewCell {
+
+  private let iconImageView = UIImageView()
+  private let titleLabel = UILabel()
+  private let descriptionLabel = UILabel()
+  private let mainStackView = UIStackView()
+  private let textStackView = UIStackView()
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupCell()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private func setupCell() {
+    accessoryType = .disclosureIndicator
+
+    // Configure icon
+    iconImageView.contentMode = .scaleAspectFit
+    iconImageView.tintColor = .systemBlue
+    iconImageView.snp.makeConstraints { make in
+      make.size.equalTo(grid(8))
+    }
+
+    // Configure title label
+    titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+    titleLabel.textColor = .label
+    titleLabel.numberOfLines = 1
+
+    // Configure description label
+    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+    descriptionLabel.textColor = .secondaryLabel
+    descriptionLabel.numberOfLines = 0
+
+    // Configure text stack view
+    textStackView.axis = .vertical
+    textStackView.spacing = grid(1)
+    textStackView.alignment = .leading
+    textStackView.addArrangedSubview(titleLabel)
+    textStackView.addArrangedSubview(descriptionLabel)
+
+    // Configure main stack view
+    mainStackView.axis = .horizontal
+    mainStackView.spacing = grid(4)
+    mainStackView.alignment = .center
+    mainStackView.addArrangedSubview(iconImageView)
+    mainStackView.addArrangedSubview(textStackView)
+
+    contentView.addSubview(mainStackView)
+
+    // Layout constraints
+    mainStackView.snp.makeConstraints { make in
+      make.leading.equalTo(contentView).offset(grid(4))
+      make.trailing.equalTo(contentView).offset(-grid(4))
+      make.top.equalTo(contentView).offset(grid(3))
+      make.bottom.equalTo(contentView).offset(-grid(3))
+    }
+  }
+
+  func configure(with demoItem: SplitViewDemoViewController.DemoItem) {
+    iconImageView.image = UIImage(systemName: demoItem.iconName)
+    titleLabel.text = demoItem.title
+    descriptionLabel.text = demoItem.description
   }
 }

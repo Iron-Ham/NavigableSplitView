@@ -90,12 +90,13 @@ class AboutViewController: UIViewController {
     copyrightLabel.translatesAutoresizingMaskIntoConstraints = false
 
     // Add all views
-    [
+    let allViews = [
       appIconImageView, appNameLabel, versionLabel, descriptionLabel,
       featuresHeaderLabel, featuresStackView, developerHeaderLabel, developerInfoView,
       linksHeaderLabel, linksStackView, copyrightLabel,
-    ].forEach {
-      contentView.addSubview($0)
+    ]
+    for view in allViews {
+      contentView.addSubview(view)
     }
 
     // Layout constraints
