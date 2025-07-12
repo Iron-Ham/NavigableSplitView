@@ -63,6 +63,8 @@ public class NavigableSplitViewController: UIViewController {
     }
   }
 
+  private let showPrimaryOnCompact: Bool
+
   /// Initializes a new navigable split view controller with primary and optional secondary view controllers.
   ///
   /// Creates a split view controller configured with double column style and tile behavior.
@@ -74,21 +76,26 @@ public class NavigableSplitViewController: UIViewController {
   ///   - secondary: The secondary (detail) view controller to display. Can be `nil`
   public init(
     primary: UIViewController,
-    secondary: UIViewController?
+    secondary: UIViewController,
+    showPrimaryOnCompact: Bool = false
   ) {
+    self.showPrimaryOnCompact = showPrimaryOnCompact
     self._splitVC = CustomUISplitViewController(style: .doubleColumn)
     super.init(nibName: nil, bundle: nil)
     splitVC.preferredDisplayMode = .oneBesideSecondary
     splitVC.preferredSplitBehavior = .tile
+    splitVC.delegate = self
     splitVC.setViewController(primary, for: .primary)
     // Possible iOS 26 Beta Bug:
     // This must be deferred until after `viewDidAppear`, or we will end up in an infinite
     // logging loop, which consumes all system resources. This only applies in compact mode.
-    //
-    // On older systems, this works as intended.
     // https://developer.apple.com/forums/thread/792740#792740021
     if #available(iOS 26.0, *), traitCollection.horizontalSizeClass == .compact {
-      self.deferredSecondaryViewController = secondary
+      self.deferredSecondaryViewController = if !showPrimaryOnCompact {
+        secondary
+      } else {
+        nil
+      }
     } else {
       splitVC.setViewController(secondary, for: .secondary)
     }
@@ -134,7 +141,7 @@ public class NavigableSplitViewController: UIViewController {
   /// - Parameter animated: Whether the appearance should be animated
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    navigationController?.setNavigationBarHidden(true, animated: true)
+    navigationController?.setNavigationBarHidden(true, animated: false)
   }
 
   /// Called every time the view is about to disappear.
@@ -145,7 +152,7 @@ public class NavigableSplitViewController: UIViewController {
   /// - Parameter animated: Whether the disappearance should be animated
   public override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
-    navigationController?.setNavigationBarHidden(false, animated: true)
+    navigationController?.setNavigationBarHidden(false, animated: false)
   }
 
   /// Called after the view has appeared on screen.
@@ -222,5 +229,30 @@ public class NavigableSplitViewController: UIViewController {
 
   @objc private func backButtonTapped() {
     navigationController?.popViewController(animated: true)
+  }
+}
+
+extension NavigableSplitViewController: UISplitViewControllerDelegate {
+  public func splitViewController(
+    _ splitViewController: UISplitViewController,
+    showDetail vc: UIViewController,
+    sender: Any?
+  ) -> Bool {
+    if splitViewController.isCollapsed, let secondaryViewController {
+      secondaryViewController.navigationController?.viewControllers = []
+    }
+    return false
+  }
+
+  public func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
+    if traitCollection.horizontalSizeClass == .compact {
+      if showPrimaryOnCompact {
+        return .primary
+      } else {
+        return .secondary
+      }
+    } else {
+      return .secondary
+    }
   }
 }

@@ -84,7 +84,8 @@ class SplitViewDemoViewController: UIViewController {
 
     let splitViewController = NavigableSplitViewController(
       primary: listVC,
-      secondary: detailVC
+      secondary: detailVC,
+      showPrimaryOnCompact: true
     )
 
     navigationController?.pushViewController(splitViewController, animated: true)

@@ -55,8 +55,17 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-    // In a real app, this would update the detail view
-    NotificationCenter.default.post(name: .itemSelected, object: items[indexPath.row])
+
+    let selectedItem = items[indexPath.row]
+
+    // Create a detail view controller for this selection
+    let detailVC = DetailTableViewController(style: .insetGrouped)
+    detailVC.configure(with: selectedItem)
+
+    // Show the detail view controller
+    if let splitViewController = self.splitViewController {
+      splitViewController.showDetailViewController(detailVC, sender: self)
+    }
   }
 }
 
@@ -69,7 +78,6 @@ class DetailTableViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
-    setupNotificationObserver()
     setupDetailItems()
     setupNavigationBar()
   }
@@ -95,21 +103,11 @@ class DetailTableViewController: UITableViewController {
     ]
   }
 
-  private func setupNotificationObserver() {
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(itemSelected(_:)),
-      name: .itemSelected,
-      object: nil
-    )
-  }
-
-  @objc private func itemSelected(_ notification: Notification) {
-    guard let item = notification.object as? String else { return }
+  func configure(with item: String) {
     selectedItem = item
-    DispatchQueue.main.async {
-      self.tableView.reloadData()
-      self.updateInspectorButtonVisibility()
+    if isViewLoaded {
+      tableView.reloadData()
+      updateInspectorButtonVisibility()
 
       // Update inspector if it's currently visible
       if #available(iOS 26.0, *),
@@ -121,10 +119,6 @@ class DetailTableViewController: UITableViewController {
         inspectorVC.configure(for: item)
       }
     }
-  }
-
-  deinit {
-    NotificationCenter.default.removeObserver(self)
   }
 
   private func setupNavigationBar() {
@@ -639,10 +633,4 @@ class DetailInspectorViewController: UIViewController {
     default: return "folder.fill"
     }
   }
-}
-
-// MARK: - Notification Extension
-
-extension Notification.Name {
-  static let itemSelected = Notification.Name("itemSelected")
 }
