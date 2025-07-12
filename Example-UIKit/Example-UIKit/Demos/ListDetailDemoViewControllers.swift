@@ -113,7 +113,7 @@ class DetailTableViewController: UITableViewController {
 
       // Update inspector if it's currently visible
       if #available(iOS 26.0, *),
-         let splitViewController = self.splitViewController,
+        let splitViewController = self.splitViewController,
         let inspectorVC = splitViewController.viewController(for: .inspector)
           as? DetailInspectorViewController,
         splitViewController.isShowing(.inspector)
@@ -139,7 +139,7 @@ class DetailTableViewController: UITableViewController {
   }
 
   func updateInspectorButtonVisibility() {
-    if #available(iOS 26.0, *), let splitViewController{
+    if #available(iOS 26.0, *), let splitViewController {
       inspectorButton.isHidden = splitViewController.isShowing(.inspector)
     } else {
       inspectorButton.isHidden = true
