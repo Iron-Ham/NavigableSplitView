@@ -10,257 +10,35 @@ import UIKit
 
 class AboutViewController: UIViewController {
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupUI()
-  }
+  private lazy var tableView: UITableView = {
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    tableView.delegate = self
+    tableView.dataSource = self
+    tableView.cellLayoutMarginsFollowReadableWidth = true
+    tableView.separatorStyle = .none
+    tableView.register(AboutHeaderCell.self, forCellReuseIdentifier: "AboutHeaderCell")
+    tableView.register(AboutDescriptionCell.self, forCellReuseIdentifier: "AboutDescriptionCell")
+    tableView.register(
+      AboutSectionHeaderCell.self, forCellReuseIdentifier: "AboutSectionHeaderCell")
+    tableView.register(AboutFeatureCell.self, forCellReuseIdentifier: "AboutFeatureCell")
+    tableView.register(AboutDeveloperCell.self, forCellReuseIdentifier: "AboutDeveloperCell")
+    tableView.register(AboutLinkCell.self, forCellReuseIdentifier: "AboutLinkCell")
+    tableView.register(AboutCopyrightCell.self, forCellReuseIdentifier: "AboutCopyrightCell")
+    return tableView
+  }()
 
-  private func setupUI() {
-    view.backgroundColor = .systemBackground
-    title = "About"
-
-    let scrollView = UIScrollView()
-    scrollView.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(scrollView)
-
-    let contentView = UIView()
-    contentView.translatesAutoresizingMaskIntoConstraints = false
-    scrollView.addSubview(contentView)
-
-    // App Icon and Title
-    let appIconImageView = UIImageView()
-    appIconImageView.image = UIImage(systemName: "rectangle.split.2x1.fill")
-    appIconImageView.tintColor = .systemBlue
-    appIconImageView.contentMode = .scaleAspectFit
-    appIconImageView.translatesAutoresizingMaskIntoConstraints = false
-
-    let appNameLabel = UILabel()
-    appNameLabel.text = "NavigableSplitView"
-    appNameLabel.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-    appNameLabel.textAlignment = .center
-    appNameLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    let versionLabel = UILabel()
-    versionLabel.text = "Version 1.0.0"
-    versionLabel.font = UIFont.preferredFont(forTextStyle: .callout)
-    versionLabel.textColor = .secondaryLabel
-    versionLabel.textAlignment = .center
-    versionLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    // Description
-    let descriptionLabel = UILabel()
-    descriptionLabel.text =
-      "A powerful UIKit component that enables seamless integration of split view controllers into navigation hierarchies. Push split views onto navigation stacks just like any other view controller."
-    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .body)
-    descriptionLabel.textColor = .label
-    descriptionLabel.textAlignment = .center
-    descriptionLabel.numberOfLines = 0
-    descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    // Features Section
-    let featuresHeaderLabel = UILabel()
-    featuresHeaderLabel.text = "Key Features"
-    featuresHeaderLabel.font = UIFont.preferredFont(forTextStyle: .title2)
-    featuresHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    let featuresStackView = createFeaturesStackView()
-
-    // Developer Section
-    let developerHeaderLabel = UILabel()
-    developerHeaderLabel.text = "Developer"
-    developerHeaderLabel.font = UIFont.preferredFont(forTextStyle: .title2)
-    developerHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    let developerInfoView = createDeveloperInfoView()
-
-    // Links Section
-    let linksHeaderLabel = UILabel()
-    linksHeaderLabel.text = "Links"
-    linksHeaderLabel.font = UIFont.preferredFont(forTextStyle: .title2)
-    linksHeaderLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    let linksStackView = createLinksStackView()
-
-    // Copyright
-    let copyrightLabel = UILabel()
-    copyrightLabel.text = "© 2025 NavigableSplitView. All rights reserved."
-    copyrightLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
-    copyrightLabel.textColor = .tertiaryLabel
-    copyrightLabel.textAlignment = .center
-    copyrightLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    // Add all views
-    let allViews = [
-      appIconImageView, appNameLabel, versionLabel, descriptionLabel,
-      featuresHeaderLabel, featuresStackView, developerHeaderLabel, developerInfoView,
-      linksHeaderLabel, linksStackView, copyrightLabel,
-    ]
-    for view in allViews {
-      contentView.addSubview(view)
-    }
-
-    // Layout constraints
-    NSLayoutConstraint.activate([
-      scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-      scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-      scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-      contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-      contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-      contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-      contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-      contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
-      appIconImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
-      appIconImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-      appIconImageView.widthAnchor.constraint(equalToConstant: 80),
-      appIconImageView.heightAnchor.constraint(equalToConstant: 80),
-
-      appNameLabel.topAnchor.constraint(equalTo: appIconImageView.bottomAnchor, constant: 16),
-      appNameLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-      appNameLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
-
-      versionLabel.topAnchor.constraint(equalTo: appNameLabel.bottomAnchor, constant: 4),
-      versionLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-      versionLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
-
-      descriptionLabel.topAnchor.constraint(equalTo: versionLabel.bottomAnchor, constant: 24),
-      descriptionLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-      descriptionLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
-
-      featuresHeaderLabel.topAnchor.constraint(
-        equalTo: descriptionLabel.bottomAnchor, constant: 40),
-      featuresHeaderLabel.leadingAnchor.constraint(
-        equalTo: view.readableContentGuide.leadingAnchor),
-
-      featuresStackView.topAnchor.constraint(
-        equalTo: featuresHeaderLabel.bottomAnchor, constant: 16),
-      featuresStackView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-      featuresStackView.trailingAnchor.constraint(
-        equalTo: view.readableContentGuide.trailingAnchor),
-
-      developerHeaderLabel.topAnchor.constraint(
-        equalTo: featuresStackView.bottomAnchor, constant: 40),
-      developerHeaderLabel.leadingAnchor.constraint(
-        equalTo: view.readableContentGuide.leadingAnchor),
-
-      developerInfoView.topAnchor.constraint(
-        equalTo: developerHeaderLabel.bottomAnchor, constant: 16),
-      developerInfoView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-      developerInfoView.trailingAnchor.constraint(
-        equalTo: view.readableContentGuide.trailingAnchor),
-
-      linksHeaderLabel.topAnchor.constraint(equalTo: developerInfoView.bottomAnchor, constant: 40),
-      linksHeaderLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-
-      linksStackView.topAnchor.constraint(equalTo: linksHeaderLabel.bottomAnchor, constant: 16),
-      linksStackView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-      linksStackView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
-
-      copyrightLabel.topAnchor.constraint(equalTo: linksStackView.bottomAnchor, constant: 40),
-      copyrightLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-      copyrightLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
-      copyrightLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30),
-    ])
-  }
-
-  private func createFeaturesStackView() -> UIStackView {
-    let stackView = UIStackView()
-    stackView.axis = .vertical
-    stackView.spacing = 12
-    stackView.translatesAutoresizingMaskIntoConstraints = false
-
-    let features = [
+  private let sections: [AboutSection] = [
+    .header,
+    .description,
+    .features([
       ("checkmark.circle.fill", "Seamless Navigation Integration"),
       ("arrow.left.circle.fill", "Automatic Back Button Handling"),
       ("ipad.landscape.and.iphone", "Adaptive Layout Support"),
       ("gear", "Customizable Display Options"),
       ("swift", "Pure UIKit Implementation"),
-    ]
-
-    for (iconName, text) in features {
-      let featureView = createFeatureView(iconName: iconName, text: text)
-      stackView.addArrangedSubview(featureView)
-    }
-
-    return stackView
-  }
-
-  private func createFeatureView(iconName: String, text: String) -> UIView {
-    let containerView = UIView()
-
-    let iconImageView = UIImageView()
-    iconImageView.image = UIImage(systemName: iconName)
-    iconImageView.tintColor = .systemGreen
-    iconImageView.contentMode = .scaleAspectFit
-    iconImageView.translatesAutoresizingMaskIntoConstraints = false
-
-    let textLabel = UILabel()
-    textLabel.text = text
-    textLabel.font = UIFont.preferredFont(forTextStyle: .callout)
-    textLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    containerView.addSubview(iconImageView)
-    containerView.addSubview(textLabel)
-
-    NSLayoutConstraint.activate([
-      iconImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-      iconImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-      iconImageView.widthAnchor.constraint(equalToConstant: 20),
-      iconImageView.heightAnchor.constraint(equalToConstant: 20),
-
-      textLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
-      textLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-      textLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-
-      containerView.heightAnchor.constraint(equalToConstant: 24),
-    ])
-
-    return containerView
-  }
-
-  private func createDeveloperInfoView() -> UIView {
-    let containerView = UIView()
-    containerView.backgroundColor = .secondarySystemBackground
-    containerView.layer.cornerRadius = 12
-    containerView.translatesAutoresizingMaskIntoConstraints = false
-
-    let nameLabel = UILabel()
-    nameLabel.text = "Hesham Salman"
-    nameLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-    nameLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    let roleLabel = UILabel()
-    roleLabel.text = "iOS Developer"
-    roleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-    roleLabel.textColor = .secondaryLabel
-    roleLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    containerView.addSubview(nameLabel)
-    containerView.addSubview(roleLabel)
-
-    NSLayoutConstraint.activate([
-      nameLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-      nameLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-      nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-
-      roleLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
-      roleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-      roleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-      roleLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
-    ])
-
-    return containerView
-  }
-
-  private func createLinksStackView() -> UIStackView {
-    let stackView = UIStackView()
-    stackView.axis = .vertical
-    stackView.spacing = 8
-    stackView.translatesAutoresizingMaskIntoConstraints = false
-
-    let links = [
+    ]),
+    .developer,
+    .links([
       ("GitHub Repository", "link.circle.fill", "https://github.com/example/navigablesplitview"),
       ("Documentation", "book.circle.fill", "https://docs.example.com/navigablesplitview"),
       ("API Reference", "doc.text.fill", "https://api.example.com/navigablesplitview"),
@@ -268,63 +46,489 @@ class AboutViewController: UIViewController {
         "Swift Package Manager", "shippingbox.fill",
         "https://swiftpackageindex.com/example/navigablesplitview"
       ),
-    ]
+    ]),
+    .copyright,
+  ]
 
-    for (title, iconName, url) in links {
-      let linkButton = createLinkButton(title: title, iconName: iconName, url: url)
-      stackView.addArrangedSubview(linkButton)
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    setupUI()
+  }
+
+  private func setupUI() {
+    view.backgroundColor = .systemGroupedBackground
+    title = "About"
+
+    view.addSubview(tableView)
+    tableView.snp.makeConstraints { make in
+      make.edges.equalTo(view.safeAreaLayoutGuide)
     }
 
-    return stackView
+  }
+}
+
+// MARK: - About Section Enum
+
+enum AboutSection {
+  case header
+  case description
+  case features([(String, String)])  // (iconName, text)
+  case developer
+  case links([(String, String, String)])  // (title, iconName, url)
+  case copyright
+
+  var title: String? {
+    switch self {
+    case .features: return "Key Features"
+    case .developer: return "Developer"
+    case .links: return "Links"
+    default: return nil
+    }
+  }
+}
+
+// MARK: - UITableView DataSource & Delegate
+
+extension AboutViewController: UITableViewDataSource, UITableViewDelegate {
+
+  func numberOfSections(in tableView: UITableView) -> Int {
+    return sections.count
   }
 
-  private func createLinkButton(title: String, iconName: String, url: String) -> UIButton {
-    let button = UIButton(type: .system)
-    button.backgroundColor = .tertiarySystemBackground
-    button.layer.cornerRadius = 8
-    button.contentHorizontalAlignment = .leading
-    button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
-    button.translatesAutoresizingMaskIntoConstraints = false
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    let aboutSection = sections[section]
+    switch aboutSection {
+    case .features(let features):
+      return 1 + features.count  // header + features
+    case .links(let links):
+      return 1 + links.count  // header + links
+    default:
+      return 1
+    }
+  }
 
-    let iconImageView = UIImageView()
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let aboutSection = sections[indexPath.section]
+
+    switch aboutSection {
+    case .header:
+      let cell =
+        tableView.dequeueReusableCell(withIdentifier: "AboutHeaderCell", for: indexPath)
+        as! AboutHeaderCell
+      return cell
+
+    case .description:
+      let cell =
+        tableView.dequeueReusableCell(withIdentifier: "AboutDescriptionCell", for: indexPath)
+        as! AboutDescriptionCell
+      return cell
+
+    case .features(let features):
+      if indexPath.row == 0 {
+        let cell =
+          tableView.dequeueReusableCell(withIdentifier: "AboutSectionHeaderCell", for: indexPath)
+          as! AboutSectionHeaderCell
+        cell.configure(title: "Key Features")
+        return cell
+      } else {
+        let cell =
+          tableView.dequeueReusableCell(withIdentifier: "AboutFeatureCell", for: indexPath)
+          as! AboutFeatureCell
+        let feature = features[indexPath.row - 1]
+        cell.configure(iconName: feature.0, text: feature.1)
+        return cell
+      }
+
+    case .developer:
+      let cell =
+        tableView.dequeueReusableCell(withIdentifier: "AboutDeveloperCell", for: indexPath)
+        as! AboutDeveloperCell
+      return cell
+
+    case .links(let links):
+      if indexPath.row == 0 {
+        let cell =
+          tableView.dequeueReusableCell(withIdentifier: "AboutSectionHeaderCell", for: indexPath)
+          as! AboutSectionHeaderCell
+        cell.configure(title: "Links")
+        return cell
+      } else {
+        let cell =
+          tableView.dequeueReusableCell(withIdentifier: "AboutLinkCell", for: indexPath)
+          as! AboutLinkCell
+        let link = links[indexPath.row - 1]
+        cell.configure(title: link.0, iconName: link.1, url: link.2)
+        cell.delegate = self
+        return cell
+      }
+
+    case .copyright:
+      let cell =
+        tableView.dequeueReusableCell(withIdentifier: "AboutCopyrightCell", for: indexPath)
+        as! AboutCopyrightCell
+      return cell
+    }
+  }
+}
+
+// MARK: - AboutLinkCell Delegate
+
+protocol AboutLinkCellDelegate: AnyObject {
+  func aboutLinkCell(_ cell: AboutLinkCell, didTapLinkWithURL url: String)
+}
+
+extension AboutViewController: AboutLinkCellDelegate {
+  func aboutLinkCell(_ cell: AboutLinkCell, didTapLinkWithURL url: String) {
+    guard let url = URL(string: url) else { return }
+    UIApplication.shared.open(url)
+  }
+}
+
+// MARK: - Table View Cells
+
+class AboutHeaderCell: UITableViewCell {
+
+  private let containerStackView = UIStackView()
+  private let appIconImageView = UIImageView()
+  private let appNameLabel = UILabel()
+  private let versionLabel = UILabel()
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private func setupUI() {
+    selectionStyle = .none
+    backgroundColor = .clear
+
+    // Configure stack view
+    containerStackView.axis = .vertical
+    containerStackView.spacing = grid(4)
+    containerStackView.alignment = .center
+
+    // Configure app icon
+    appIconImageView.image = UIImage(systemName: "rectangle.split.2x1.fill")
+    appIconImageView.tintColor = .systemBlue
+    appIconImageView.contentMode = .scaleAspectFit
+
+    // Configure labels
+    appNameLabel.text = "NavigableSplitView"
+    appNameLabel.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+    appNameLabel.textAlignment = .center
+
+    versionLabel.text = "Version 1.0.0"
+    versionLabel.font = UIFont.preferredFont(forTextStyle: .callout)
+    versionLabel.textColor = .secondaryLabel
+    versionLabel.textAlignment = .center
+
+    // Add to stack view
+    containerStackView.addArrangedSubview(appIconImageView)
+    containerStackView.addArrangedSubview(appNameLabel)
+    containerStackView.addArrangedSubview(versionLabel)
+
+    contentView.addSubview(containerStackView)
+
+    // Constraints
+    appIconImageView.snp.makeConstraints { make in
+      make.size.equalTo(80)
+    }
+
+    containerStackView.snp.makeConstraints { make in
+      make.edges.equalTo(contentView.layoutMarginsGuide).inset(grid(4))
+    }
+  }
+}
+
+class AboutDescriptionCell: UITableViewCell {
+
+  private let descriptionLabel = UILabel()
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private func setupUI() {
+    selectionStyle = .none
+    backgroundColor = .clear
+
+    descriptionLabel.text =
+      "A powerful UIKit component that enables seamless integration of split view controllers into navigation hierarchies. Push split views onto navigation stacks just like any other view controller."
+    descriptionLabel.font = UIFont.preferredFont(forTextStyle: .body)
+    descriptionLabel.textColor = .label
+    descriptionLabel.textAlignment = .center
+    descriptionLabel.numberOfLines = 0
+
+    contentView.addSubview(descriptionLabel)
+
+    descriptionLabel.snp.makeConstraints { make in
+      make.edges.equalTo(contentView.layoutMarginsGuide).inset(grid(4))
+    }
+  }
+}
+
+class AboutSectionHeaderCell: UITableViewCell {
+
+  private let titleLabel = UILabel()
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private func setupUI() {
+    selectionStyle = .none
+    backgroundColor = .clear
+
+    titleLabel.font = UIFont.preferredFont(forTextStyle: .title2)
+    titleLabel.textColor = .label
+
+    contentView.addSubview(titleLabel)
+
+    titleLabel.snp.makeConstraints { make in
+      make.edges.equalTo(contentView.layoutMarginsGuide).inset(
+        UIEdgeInsets(top: grid(6), left: 0, bottom: grid(2), right: 0))
+    }
+  }
+
+  func configure(title: String) {
+    titleLabel.text = title
+  }
+}
+
+class AboutFeatureCell: UITableViewCell {
+
+  private let containerStackView = UIStackView()
+  private let iconImageView = UIImageView()
+  private let informationLabel = UILabel()
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private func setupUI() {
+    selectionStyle = .none
+    backgroundColor = .clear
+
+    // Configure stack view
+    containerStackView.axis = .horizontal
+    containerStackView.spacing = grid(3)
+    containerStackView.alignment = .center
+
+    // Configure icon
+    iconImageView.tintColor = .systemGreen
+    iconImageView.contentMode = .scaleAspectFit
+
+    // Configure text label
+    informationLabel.font = UIFont.preferredFont(forTextStyle: .callout)
+    informationLabel.textColor = .label
+
+    // Add to stack view
+    containerStackView.addArrangedSubview(iconImageView)
+    containerStackView.addArrangedSubview(informationLabel)
+
+    contentView.addSubview(containerStackView)
+
+    // Constraints
+    iconImageView.snp.makeConstraints { make in
+      make.size.equalTo(20)
+    }
+
+    containerStackView.snp.makeConstraints { make in
+      make.edges.equalTo(contentView.layoutMarginsGuide).inset(
+        UIEdgeInsets(top: grid(2), left: 0, bottom: grid(2), right: 0))
+    }
+  }
+
+  func configure(iconName: String, text: String) {
     iconImageView.image = UIImage(systemName: iconName)
+    informationLabel.text = text
+  }
+}
+
+class AboutDeveloperCell: UITableViewCell {
+
+  private let containerStackView = UIStackView()
+  private let cardView = UIView()
+  private let nameLabel = UILabel()
+  private let roleLabel = UILabel()
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private func setupUI() {
+    selectionStyle = .none
+    backgroundColor = .clear
+
+    // Configure card view
+    cardView.backgroundColor = .secondarySystemBackground
+    cardView.layer.cornerRadius = 12
+
+    // Configure stack view
+    containerStackView.axis = .vertical
+    containerStackView.spacing = grid(1)
+
+    // Configure labels
+    nameLabel.text = "Hesham Salman"
+    nameLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+    nameLabel.textColor = .label
+
+    roleLabel.text = "iOS Developer"
+    roleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+    roleLabel.textColor = .secondaryLabel
+
+    // Add to hierarchy
+    containerStackView.addArrangedSubview(nameLabel)
+    containerStackView.addArrangedSubview(roleLabel)
+    cardView.addSubview(containerStackView)
+    contentView.addSubview(cardView)
+
+    // Add section header
+    let headerCell = AboutSectionHeaderCell()
+    headerCell.configure(title: "Developer")
+
+    // Constraints
+    cardView.snp.makeConstraints { make in
+      make.edges.equalTo(contentView.layoutMarginsGuide).inset(
+        UIEdgeInsets(top: grid(8), left: 0, bottom: grid(2), right: 0))
+    }
+
+    containerStackView.snp.makeConstraints { make in
+      make.edges.equalTo(cardView).inset(grid(4))
+    }
+  }
+}
+
+class AboutLinkCell: UITableViewCell {
+
+  weak var delegate: AboutLinkCellDelegate?
+  private var url: String = ""
+
+  private let containerStackView = UIStackView()
+  private let iconImageView = UIImageView()
+  private let titleLabel = UILabel()
+  private let chevronImageView = UIImageView()
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private func setupUI() {
+    selectionStyle = .default
+    backgroundColor = .tertiarySystemBackground
+    layer.cornerRadius = grid(2)
+
+    // Configure stack view
+    containerStackView.axis = .horizontal
+    containerStackView.spacing = grid(3)
+    containerStackView.alignment = .center
+
+    // Configure icon
     iconImageView.tintColor = .systemBlue
     iconImageView.contentMode = .scaleAspectFit
-    iconImageView.translatesAutoresizingMaskIntoConstraints = false
 
-    let titleLabel = UILabel()
-    titleLabel.text = title
+    // Configure title label
     titleLabel.font = UIFont.preferredFont(forTextStyle: .callout)
     titleLabel.textColor = .systemBlue
-    titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-    button.addSubview(iconImageView)
-    button.addSubview(titleLabel)
+    // Configure chevron
+    chevronImageView.image = UIImage(systemName: "chevron.right")
+    chevronImageView.tintColor = .tertiaryLabel
+    chevronImageView.contentMode = .scaleAspectFit
 
-    NSLayoutConstraint.activate([
-      button.heightAnchor.constraint(equalToConstant: 44),
+    // Add to stack view
+    containerStackView.addArrangedSubview(iconImageView)
+    containerStackView.addArrangedSubview(titleLabel)
+    containerStackView.addArrangedSubview(chevronImageView)
 
-      iconImageView.leadingAnchor.constraint(equalTo: button.leadingAnchor, constant: 16),
-      iconImageView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
-      iconImageView.widthAnchor.constraint(equalToConstant: 20),
-      iconImageView.heightAnchor.constraint(equalToConstant: 20),
+    contentView.addSubview(containerStackView)
 
-      titleLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
-      titleLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor),
-      titleLabel.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -16),
-    ])
+    // Constraints
+    iconImageView.snp.makeConstraints { make in
+      make.size.equalTo(20)
+    }
 
-    button.addTarget(self, action: #selector(linkButtonTapped(_:)), for: .touchUpInside)
-    button.accessibilityIdentifier = url
+    chevronImageView.snp.makeConstraints { make in
+      make.size.equalTo(CGSize(width: 8, height: 12))
+    }
 
-    return button
+    containerStackView.snp.makeConstraints { make in
+      make.edges.equalTo(contentView).inset(grid(4))
+    }
+
+    // Add tap gesture
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cellTapped))
+    addGestureRecognizer(tapGesture)
   }
 
-  @objc private func linkButtonTapped(_ sender: UIButton) {
-    guard let urlString = sender.accessibilityIdentifier,
-      let url = URL(string: urlString)
-    else { return }
+  func configure(title: String, iconName: String, url: String) {
+    titleLabel.text = title
+    iconImageView.image = UIImage(systemName: iconName)
+    self.url = url
+  }
 
-    UIApplication.shared.open(url)
+  @objc private func cellTapped() {
+    delegate?.aboutLinkCell(self, didTapLinkWithURL: url)
+  }
+}
+
+class AboutCopyrightCell: UITableViewCell {
+
+  private let copyrightLabel = UILabel()
+
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  private func setupUI() {
+    selectionStyle = .none
+    backgroundColor = .clear
+
+    copyrightLabel.text = "© 2025 NavigableSplitView. All rights reserved."
+    copyrightLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+    copyrightLabel.textColor = .tertiaryLabel
+    copyrightLabel.textAlignment = .center
+    copyrightLabel.numberOfLines = 0
+
+    contentView.addSubview(copyrightLabel)
+
+    copyrightLabel.snp.makeConstraints { make in
+      make.edges.equalTo(contentView.layoutMarginsGuide).inset(
+        UIEdgeInsets(top: grid(8), left: grid(4), bottom: grid(4), right: grid(4)))
+    }
   }
 }
