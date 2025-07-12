@@ -6,6 +6,13 @@ A powerful UIKit component that enables seamless integration of split view contr
 
 `NavigableSplitViewController` solves a common problem in iOS development: how to embed a `UISplitViewController` within an existing navigation hierarchy. Traditionally, split view controllers must be root view controllers, but this wrapper allows you to push them onto navigation stacks while maintaining proper navigation behavior and visual consistency.
 
+### Video Examples
+
+- [iPadOS 18](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPadOS18.mov)
+- [iPadOS 26](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPadOS26.mov)
+- [iOS 18](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPhone18.mov)
+- [iOS 26](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPhone26.mov)
+
 ## Features
 
 - ✅ **Seamless Navigation Integration** - Push split views onto existing navigation stacks
