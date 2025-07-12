@@ -162,7 +162,7 @@ public class NavigableSplitViewController: UIViewController {
   /// - Parameter animated: Whether the appearance was animated
   public override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    if let deferredSecondaryViewController {
+    if let deferredSecondaryViewController, splitViewControllerColumnProviding?.column == .secondary {
       DispatchQueue.main.async {
         self.splitVC.showDetailViewController(deferredSecondaryViewController, sender: nil)
       }
@@ -200,7 +200,9 @@ public class NavigableSplitViewController: UIViewController {
 
     if let primaryViewController {
       addNavigationButtons(
-        to: primaryViewController, includeBackButton: isBackButtonVisible(for: .primary))
+        to: primaryViewController,
+        includeBackButton: isBackButtonVisible(for: .primary)
+      )
     }
   }
 
