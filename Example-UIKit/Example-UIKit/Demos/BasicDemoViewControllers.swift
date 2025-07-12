@@ -1,10 +1,4 @@
-//
-//  BasicDemoViewControllers.swift
-//  Example-UIKit
-//
-//  Created by Hesham Salman on 7/11/25.
-//
-
+import NavigableSplitView
 import SnapKit
 import UIKit
 
@@ -45,6 +39,10 @@ class BasicPrimaryViewController: UIViewController {
       make.centerY.equalToSuperview()
     }
   }
+}
+
+extension BasicPrimaryViewController: SplitViewControllerColumnProviding {
+  var column: UISplitViewController.Column { .secondary }
 }
 
 class BasicSecondaryViewController: UIViewController {

@@ -1,10 +1,4 @@
-//
-//  ListDetailDemoViewControllers.swift
-//  Example-UIKit
-//
-//  Created by Hesham Salman on 7/11/25.
-//
-
+import NavigableSplitView
 import SnapKit
 import UIKit
 
@@ -17,6 +11,23 @@ class ListViewController: UIViewController {
     "Desktop", "Applications", "Library", "System", "Users",
   ]
 
+  private lazy var tableView: UITableView = {
+    let tableView = UITableView(frame: .zero, style: .plain)
+    tableView.cellLayoutMarginsFollowReadableWidth = true
+    tableView.delegate = self
+    tableView.dataSource = self
+    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+    tableView.translatesAutoresizingMaskIntoConstraints = false
+    return tableView
+  }()
+
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    if let indexPath = tableView.indexPathForSelectedRow, traitCollection.horizontalSizeClass == .compact {
+      tableView.deselectRow(at: indexPath, animated: animated)
+    }
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
@@ -26,18 +37,17 @@ class ListViewController: UIViewController {
     view.backgroundColor = .systemBackground
     title = "List"
 
-    let tableView = UITableView(frame: .zero, style: .plain)
-    tableView.cellLayoutMarginsFollowReadableWidth = true
-    tableView.delegate = self
-    tableView.dataSource = self
-    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-    tableView.translatesAutoresizingMaskIntoConstraints = false
-
     view.addSubview(tableView)
 
     tableView.snp.makeConstraints { make in
       make.edges.equalTo(view.safeAreaLayoutGuide)
     }
+  }
+}
+
+extension ListViewController: SplitViewControllerColumnProviding {
+  var column: UISplitViewController.Column {
+    tableView.indexPathForSelectedRow == nil ? .primary : .secondary
   }
 }
 
@@ -54,8 +64,6 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-
     let selectedItem = items[indexPath.row]
 
     // Create a detail view controller for this selection
