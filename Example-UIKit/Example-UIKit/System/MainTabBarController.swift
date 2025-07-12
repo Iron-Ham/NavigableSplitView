@@ -4,6 +4,10 @@ class MainTabBarController: UITabBarController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+
+    // Set delegate
+    delegate = self
+
     setupTabs()
     configureTabBarAppearance()
     configureSidebar()
@@ -89,9 +93,6 @@ class MainTabBarController: UITabBarController {
     tabs = [
       homeTab, splitViewDemoTab, aboutTab, settingsTab, documentsTab, favoritesTab, projectsTab,
     ]
-
-    // Configure reordering
-    configureSidebarReordering()
   }
 
   private func configureTabBarAppearance() {
@@ -113,52 +114,6 @@ class MainTabBarController: UITabBarController {
 
     // Configure sidebar appearance
     sidebar.isHidden = false
-  }
-
-  private func configureSidebarReordering() {
-
-    // Add edit button to the sidebar
-    addEditButtonToSidebar()
-  }
-
-  private func addEditButtonToSidebar() {
-    // Create a custom header view for the sidebar
-    let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 280, height: 60))
-    headerView.backgroundColor = .systemGroupedBackground
-
-    let titleLabel = UILabel()
-    titleLabel.text = "NavigableSplitView"
-    titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-    titleLabel.translatesAutoresizingMaskIntoConstraints = false
-
-    let editButton = UIButton(type: .system)
-    editButton.setTitle("Edit", for: .normal)
-    editButton.setTitle("Done", for: .selected)
-    editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-    editButton.translatesAutoresizingMaskIntoConstraints = false
-
-    headerView.addSubview(titleLabel)
-    headerView.addSubview(editButton)
-
-    NSLayoutConstraint.activate([
-      titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
-      titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-
-      editButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-      editButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-    ])
-
-    // Store reference to edit button for state updates
-    editButton.tag = 999  // Use tag to find button later
-  }
-
-  @objc private func editButtonTapped(_ sender: UIButton) {
-    sender.isSelected.toggle()
-
-    // Animate the button state change
-    UIView.animate(withDuration: 0.25) {
-      sender.layoutIfNeeded()
-    }
   }
 
   // MARK: - Helper Methods for Creating View Controllers
@@ -241,5 +196,37 @@ class MainTabBarController: UITabBarController {
     ])
 
     return projectsVC
+  }
+}
+
+// MARK: - UITabBarControllerDelegate
+
+extension MainTabBarController: UITabBarControllerDelegate {
+
+  func tabBarController(
+    _ tabBarController: UITabBarController, shouldSelect viewController: UIViewController
+  ) -> Bool {
+    return true
+  }
+
+  // This method is called when the user customizes the tab bar order
+  func tabBarController(
+    _ tabBarController: UITabBarController, didEndCustomizing viewControllers: [UIViewController],
+    changed: Bool
+  ) {
+    if changed {
+      // Update our tabs array to reflect the new order
+      // This helps maintain consistency between sidebar and tab bar
+      print("Tab order changed - tabs have been reordered")
+    }
+  }
+
+  // Called when the user interacts with the sidebar
+  func tabBarController(
+    _ tabBarController: UITabBarController, sidebar: UITabBarController.Sidebar,
+    didSelectTab tab: UITab
+  ) {
+    // Handle sidebar tab selection
+    print("Sidebar tab selected: \(tab.title)")
   }
 }

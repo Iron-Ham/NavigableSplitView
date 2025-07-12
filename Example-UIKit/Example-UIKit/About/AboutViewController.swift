@@ -18,12 +18,9 @@ class AboutViewController: UIViewController {
     tableView.separatorStyle = .none
     tableView.register(AboutHeaderCell.self, forCellReuseIdentifier: "AboutHeaderCell")
     tableView.register(AboutDescriptionCell.self, forCellReuseIdentifier: "AboutDescriptionCell")
-    tableView.register(
-      AboutSectionHeaderCell.self, forCellReuseIdentifier: "AboutSectionHeaderCell")
     tableView.register(AboutFeatureCell.self, forCellReuseIdentifier: "AboutFeatureCell")
     tableView.register(AboutDeveloperCell.self, forCellReuseIdentifier: "AboutDeveloperCell")
     tableView.register(AboutLinkCell.self, forCellReuseIdentifier: "AboutLinkCell")
-    tableView.register(AboutCopyrightCell.self, forCellReuseIdentifier: "AboutCopyrightCell")
     return tableView
   }()
 
@@ -47,7 +44,6 @@ class AboutViewController: UIViewController {
         "https://swiftpackageindex.com/example/navigablesplitview"
       ),
     ]),
-    .copyright,
   ]
 
   override func viewDidLoad() {
@@ -75,7 +71,6 @@ enum AboutSection {
   case features([(String, String)])  // (iconName, text)
   case developer
   case links([(String, String, String)])  // (title, iconName, url)
-  case copyright
 
   var title: String? {
     switch self {
@@ -99,9 +94,9 @@ extension AboutViewController: UITableViewDataSource, UITableViewDelegate {
     let aboutSection = sections[section]
     switch aboutSection {
     case .features(let features):
-      return 1 + features.count  // header + features
+      return features.count
     case .links(let links):
-      return 1 + links.count  // header + links
+      return links.count
     default:
       return 1
     }
@@ -124,20 +119,12 @@ extension AboutViewController: UITableViewDataSource, UITableViewDelegate {
       return cell
 
     case .features(let features):
-      if indexPath.row == 0 {
-        let cell =
-          tableView.dequeueReusableCell(withIdentifier: "AboutSectionHeaderCell", for: indexPath)
-          as! AboutSectionHeaderCell
-        cell.configure(title: "Key Features")
-        return cell
-      } else {
-        let cell =
-          tableView.dequeueReusableCell(withIdentifier: "AboutFeatureCell", for: indexPath)
-          as! AboutFeatureCell
-        let feature = features[indexPath.row - 1]
-        cell.configure(iconName: feature.0, text: feature.1)
-        return cell
-      }
+      let cell =
+        tableView.dequeueReusableCell(withIdentifier: "AboutFeatureCell", for: indexPath)
+        as! AboutFeatureCell
+      let feature = features[indexPath.row]
+      cell.configure(iconName: feature.0, text: feature.1)
+      return cell
 
     case .developer:
       let cell =
@@ -146,28 +133,22 @@ extension AboutViewController: UITableViewDataSource, UITableViewDelegate {
       return cell
 
     case .links(let links):
-      if indexPath.row == 0 {
-        let cell =
-          tableView.dequeueReusableCell(withIdentifier: "AboutSectionHeaderCell", for: indexPath)
-          as! AboutSectionHeaderCell
-        cell.configure(title: "Links")
-        return cell
-      } else {
-        let cell =
-          tableView.dequeueReusableCell(withIdentifier: "AboutLinkCell", for: indexPath)
-          as! AboutLinkCell
-        let link = links[indexPath.row - 1]
-        cell.configure(title: link.0, iconName: link.1, url: link.2)
-        cell.delegate = self
-        return cell
-      }
-
-    case .copyright:
       let cell =
-        tableView.dequeueReusableCell(withIdentifier: "AboutCopyrightCell", for: indexPath)
-        as! AboutCopyrightCell
+        tableView.dequeueReusableCell(withIdentifier: "AboutLinkCell", for: indexPath)
+        as! AboutLinkCell
+      let link = links[indexPath.row]
+      cell.configure(title: link.0, iconName: link.1, url: link.2)
+      cell.delegate = self
       return cell
     }
+  }
+
+  func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    return sections[section].title
+  }
+
+  func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return sections[section].title != nil ? UITableView.automaticDimension : 0
   }
 }
 
@@ -204,22 +185,26 @@ class AboutHeaderCell: UITableViewCell {
 
   private func setupUI() {
     selectionStyle = .none
-    backgroundColor = .clear
+    backgroundColor = .secondarySystemGroupedBackground
 
     // Configure stack view
     containerStackView.axis = .vertical
     containerStackView.spacing = grid(4)
     containerStackView.alignment = .center
 
-    // Configure app icon
+    // Configure app icon with gradient background
     appIconImageView.image = UIImage(systemName: "rectangle.split.2x1.fill")
-    appIconImageView.tintColor = .systemBlue
+    appIconImageView.tintColor = .white
     appIconImageView.contentMode = .scaleAspectFit
+    appIconImageView.backgroundColor = .systemBlue
+    appIconImageView.layer.cornerRadius = 20
+    appIconImageView.layer.masksToBounds = true
 
     // Configure labels
     appNameLabel.text = "NavigableSplitView"
     appNameLabel.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     appNameLabel.textAlignment = .center
+    appNameLabel.textColor = .label
 
     versionLabel.text = "Version 1.0.0"
     versionLabel.font = UIFont.preferredFont(forTextStyle: .callout)
@@ -259,7 +244,7 @@ class AboutDescriptionCell: UITableViewCell {
 
   private func setupUI() {
     selectionStyle = .none
-    backgroundColor = .clear
+    backgroundColor = .secondarySystemGroupedBackground
 
     descriptionLabel.text =
       "A powerful UIKit component that enables seamless integration of split view controllers into navigation hierarchies. Push split views onto navigation stacks just like any other view controller."
@@ -273,39 +258,6 @@ class AboutDescriptionCell: UITableViewCell {
     descriptionLabel.snp.makeConstraints { make in
       make.edges.equalTo(contentView.layoutMarginsGuide).inset(grid(4))
     }
-  }
-}
-
-class AboutSectionHeaderCell: UITableViewCell {
-
-  private let titleLabel = UILabel()
-
-  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-    super.init(style: style, reuseIdentifier: reuseIdentifier)
-    setupUI()
-  }
-
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  private func setupUI() {
-    selectionStyle = .none
-    backgroundColor = .clear
-
-    titleLabel.font = UIFont.preferredFont(forTextStyle: .title2)
-    titleLabel.textColor = .label
-
-    contentView.addSubview(titleLabel)
-
-    titleLabel.snp.makeConstraints { make in
-      make.edges.equalTo(contentView.layoutMarginsGuide).inset(
-        UIEdgeInsets(top: grid(6), left: 0, bottom: grid(2), right: 0))
-    }
-  }
-
-  func configure(title: String) {
-    titleLabel.text = title
   }
 }
 
@@ -326,7 +278,7 @@ class AboutFeatureCell: UITableViewCell {
 
   private func setupUI() {
     selectionStyle = .none
-    backgroundColor = .clear
+    backgroundColor = .secondarySystemGroupedBackground
 
     // Configure stack view
     containerStackView.axis = .horizontal
@@ -367,13 +319,16 @@ class AboutFeatureCell: UITableViewCell {
 class AboutDeveloperCell: UITableViewCell {
 
   private let containerStackView = UIStackView()
-  private let cardView = UIView()
+  private let profileImageView = UIImageView()
+  private let textStackView = UIStackView()
   private let nameLabel = UILabel()
   private let roleLabel = UILabel()
+  private let usernameLabel = UILabel()
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupUI()
+    loadProfileImage()
   }
 
   required init?(coder: NSCoder) {
@@ -382,15 +337,23 @@ class AboutDeveloperCell: UITableViewCell {
 
   private func setupUI() {
     selectionStyle = .none
-    backgroundColor = .clear
+    backgroundColor = .secondarySystemGroupedBackground
 
-    // Configure card view
-    cardView.backgroundColor = .secondarySystemBackground
-    cardView.layer.cornerRadius = 12
+    // Configure profile image
+    profileImageView.contentMode = .scaleAspectFill
+    profileImageView.layer.cornerRadius = 30
+    profileImageView.layer.masksToBounds = true
+    profileImageView.backgroundColor = .systemGray5
 
-    // Configure stack view
-    containerStackView.axis = .vertical
-    containerStackView.spacing = grid(1)
+    // Configure main stack view
+    containerStackView.axis = .horizontal
+    containerStackView.spacing = grid(4)
+    containerStackView.alignment = .center
+
+    // Configure text stack view
+    textStackView.axis = .vertical
+    textStackView.spacing = grid(1)
+    textStackView.alignment = .leading
 
     // Configure labels
     nameLabel.text = "Hesham Salman"
@@ -398,28 +361,54 @@ class AboutDeveloperCell: UITableViewCell {
     nameLabel.textColor = .label
 
     roleLabel.text = "iOS Developer"
-    roleLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+    roleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
     roleLabel.textColor = .secondaryLabel
 
-    // Add to hierarchy
-    containerStackView.addArrangedSubview(nameLabel)
-    containerStackView.addArrangedSubview(roleLabel)
-    cardView.addSubview(containerStackView)
-    contentView.addSubview(cardView)
+    usernameLabel.text = "@iron-ham"
+    usernameLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
+    usernameLabel.textColor = .systemBlue
 
-    // Add section header
-    let headerCell = AboutSectionHeaderCell()
-    headerCell.configure(title: "Developer")
+    // Add to text stack view
+    textStackView.addArrangedSubview(nameLabel)
+    textStackView.addArrangedSubview(roleLabel)
+    textStackView.addArrangedSubview(usernameLabel)
+
+    // Add to main stack view
+    containerStackView.addArrangedSubview(profileImageView)
+    containerStackView.addArrangedSubview(textStackView)
+
+    // Add to content view
+    contentView.addSubview(containerStackView)
 
     // Constraints
-    cardView.snp.makeConstraints { make in
-      make.edges.equalTo(contentView.layoutMarginsGuide).inset(
-        UIEdgeInsets(top: grid(8), left: 0, bottom: grid(2), right: 0))
+    profileImageView.snp.makeConstraints { make in
+      make.size.equalTo(60)
     }
 
     containerStackView.snp.makeConstraints { make in
-      make.edges.equalTo(cardView).inset(grid(4))
+      make.edges.equalTo(contentView.layoutMarginsGuide).inset(grid(4))
     }
+  }
+
+  private func loadProfileImage() {
+    guard let url = URL(string: "https://github.com/iron-ham.png") else { return }
+
+    // Create a placeholder image
+    let placeholderImage = UIImage(systemName: "person.circle.fill")?.withRenderingMode(
+      .alwaysTemplate)
+    profileImageView.image = placeholderImage
+    profileImageView.tintColor = .systemGray3
+
+    // Load the image asynchronously
+    URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+      guard let data = data, error == nil, let image = UIImage(data: data) else {
+        return
+      }
+
+      DispatchQueue.main.async {
+        self?.profileImageView.image = image
+      }
+    }.resume()
   }
 }
 
@@ -444,8 +433,7 @@ class AboutLinkCell: UITableViewCell {
 
   private func setupUI() {
     selectionStyle = .default
-    backgroundColor = .tertiarySystemBackground
-    layer.cornerRadius = grid(2)
+    backgroundColor = .secondarySystemGroupedBackground
 
     // Configure stack view
     containerStackView.axis = .horizontal
@@ -458,7 +446,7 @@ class AboutLinkCell: UITableViewCell {
 
     // Configure title label
     titleLabel.font = UIFont.preferredFont(forTextStyle: .callout)
-    titleLabel.textColor = .systemBlue
+    titleLabel.textColor = .label
 
     // Configure chevron
     chevronImageView.image = UIImage(systemName: "chevron.right")
@@ -482,7 +470,7 @@ class AboutLinkCell: UITableViewCell {
     }
 
     containerStackView.snp.makeConstraints { make in
-      make.edges.equalTo(contentView).inset(grid(4))
+      make.edges.equalTo(contentView.layoutMarginsGuide)
     }
 
     // Add tap gesture
@@ -498,37 +486,5 @@ class AboutLinkCell: UITableViewCell {
 
   @objc private func cellTapped() {
     delegate?.aboutLinkCell(self, didTapLinkWithURL: url)
-  }
-}
-
-class AboutCopyrightCell: UITableViewCell {
-
-  private let copyrightLabel = UILabel()
-
-  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-    super.init(style: style, reuseIdentifier: reuseIdentifier)
-    setupUI()
-  }
-
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  private func setupUI() {
-    selectionStyle = .none
-    backgroundColor = .clear
-
-    copyrightLabel.text = "© 2025 NavigableSplitView. All rights reserved."
-    copyrightLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
-    copyrightLabel.textColor = .tertiaryLabel
-    copyrightLabel.textAlignment = .center
-    copyrightLabel.numberOfLines = 0
-
-    contentView.addSubview(copyrightLabel)
-
-    copyrightLabel.snp.makeConstraints { make in
-      make.edges.equalTo(contentView.layoutMarginsGuide).inset(
-        UIEdgeInsets(top: grid(8), left: grid(4), bottom: grid(4), right: grid(4)))
-    }
   }
 }
