@@ -73,6 +73,8 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
 
     if let splitViewController {
       splitViewController.showDetailViewController(detailVC, sender: self)
+    } else {
+      navigationController?.pushViewController(detailVC, animated: true)
     }
   }
 }

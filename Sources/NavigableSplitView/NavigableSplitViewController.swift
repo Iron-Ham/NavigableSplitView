@@ -52,6 +52,11 @@ public class NavigableSplitViewController: UIViewController {
   }
 
   private var deferredSecondaryViewController: UIViewController?
+  /// Flag to track if the view controller has fully appeared and is ready for split view operations
+  internal var isReadyForSplitViewOperations = false
+
+  /// Queue to store deferred split view operations until the view controller is ready
+  internal var deferredOperations: [() -> Void] = []
 
   private var primaryNavHasBackStack: Bool {
     if let primaryNavController = primaryViewController as? UINavigationController,
@@ -81,6 +86,10 @@ public class NavigableSplitViewController: UIViewController {
     self.splitViewControllerColumnProviding = primary
     self._splitVC = CustomUISplitViewController(style: .doubleColumn)
     super.init(nibName: nil, bundle: nil)
+
+    // Establish the connection for deferred operations
+    _splitVC.navigableSplitViewController = self
+
     splitVC.preferredDisplayMode = .oneBesideSecondary
     splitVC.preferredSplitBehavior = .tile
     splitVC.delegate = self
@@ -143,11 +152,15 @@ public class NavigableSplitViewController: UIViewController {
   ///
   /// Restores the navigation bar visibility with animation when leaving
   /// the split view to maintain normal navigation behavior in other views.
+  /// Also resets the readiness flag for split view operations.
   ///
   /// - Parameter animated: Whether the disappearance should be animated
   public override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     navigationController?.setNavigationBarHidden(false, animated: false)
+
+    // Reset readiness flag when transitioning away
+    isReadyForSplitViewOperations = false
   }
 
   /// Called after the view has appeared on screen.
@@ -158,12 +171,24 @@ public class NavigableSplitViewController: UIViewController {
   /// - Parameter animated: Whether the appearance was animated
   public override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+
+    // Mark as ready for split view operations
+    isReadyForSplitViewOperations = true
+
     if let deferredSecondaryViewController,
       splitViewControllerColumnProviding?.preferredCompactColumn == .secondary
     {
       DispatchQueue.main.async {
         self.splitVC.showDetailViewController(deferredSecondaryViewController, sender: nil)
       }
+    }
+
+    // Process any deferred operations
+    DispatchQueue.main.async {
+      for operation in self.deferredOperations {
+        operation()
+      }
+      self.deferredOperations.removeAll()
     }
   }
 
