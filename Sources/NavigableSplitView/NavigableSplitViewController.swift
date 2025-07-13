@@ -158,7 +158,9 @@ public class NavigableSplitViewController: UIViewController {
   /// - Parameter animated: Whether the appearance was animated
   public override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    if let deferredSecondaryViewController, splitViewControllerColumnProviding?.preferredCompactColumn == .secondary {
+    if let deferredSecondaryViewController,
+      splitViewControllerColumnProviding?.preferredCompactColumn == .secondary
+    {
       DispatchQueue.main.async {
         self.splitVC.showDetailViewController(deferredSecondaryViewController, sender: nil)
       }

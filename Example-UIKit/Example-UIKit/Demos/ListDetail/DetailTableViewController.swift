@@ -172,7 +172,9 @@ class DetailTableViewController: UITableViewController {
       switch indexPath.row {
       case 0:
         // In a real application, use a router of some sort to decide how/when to do this.
-        if let splitViewController, let navigation = splitViewController.parent?.navigationController {
+        if let splitViewController,
+          let navigation = splitViewController.parent?.navigationController
+        {
           navigation.pushViewController(ListViewController(), animated: true)
         } else {
           navigationController?.pushViewController(ListViewController(), animated: true)
@@ -183,7 +185,9 @@ class DetailTableViewController: UITableViewController {
           secondary: DetailTableViewController()
         )
         // In a real application, use a router of some sort to decide how/when to do this.
-        if let splitViewController, let navigation = splitViewController.parent?.navigationController {
+        if let splitViewController,
+          let navigation = splitViewController.parent?.navigationController
+        {
           navigation.pushViewController(newSplitViewController, animated: true)
         } else {
           navigationController?.pushViewController(newSplitViewController, animated: true)

@@ -1,6 +1,4 @@
-#if canImport(UIKit)
-  import UIKit
-#endif
+import UIKit
 
 class CustomUISplitViewController: UISplitViewController {
   override func showDetailViewController(_ vc: UIViewController, sender: Any?) {

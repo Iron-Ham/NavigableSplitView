@@ -23,7 +23,9 @@ class ListViewController: UIViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    if let indexPath = tableView.indexPathForSelectedRow, traitCollection.horizontalSizeClass == .compact {
+    if let indexPath = tableView.indexPathForSelectedRow,
+      traitCollection.horizontalSizeClass == .compact
+    {
       tableView.deselectRow(at: indexPath, animated: animated)
     }
   }
