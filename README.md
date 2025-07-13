@@ -6,15 +6,22 @@ A powerful UIKit component that enables seamless integration of split view contr
 
 `NavigableSplitViewController` solves a common problem in iOS development: how to embed a `UISplitViewController` within an existing navigation hierarchy. Traditionally, split view controllers must be root view controllers, but this wrapper allows you to push them onto navigation stacks while maintaining proper navigation behavior and visual consistency.
 
+### Video Examples
+
+- [iPadOS 18](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPadOS18.mov)
+- [iPadOS 26](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPadOS26.mov)
+- [iOS 18](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPhone18.mov)
+- [iOS 26](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPhone26.mov)
+
 ## Features
 
-✅ **Seamless Navigation Integration** - Push split views onto existing navigation stacks
-✅ **Automatic Back Button Handling** - Smart back button mirroring maintains navigation consistency
-✅ **Adaptive Layout Support** - Works across all device sizes and orientations
-✅ **Customizable Display Options** - Configure split behavior and display modes
-✅ **Pure UIKit Implementation** - No dependencies, works with existing UIKit apps
-✅ **iOS 26+ Inspector Support** - Three-column layouts with inspector panes
-✅ **iOS 18 Bug Workarounds** - Built-in fixes for known platform issues
+- ✅ **Seamless Navigation Integration** - Push split views onto existing navigation stacks
+- ✅ **Automatic Back Button Handling** - Smart back button mirroring maintains navigation consistency
+- ✅ **Adaptive Layout Support** - Works across all device sizes and orientations
+- ✅ **Customizable Display Options** - Configure split behavior and display modes
+- ✅ **Pure UIKit Implementation** - No dependencies, works with existing UIKit apps
+- ✅ **iOS 26+ Inspector Support** - Three-column layouts with inspector panes
+- ✅ **iOS 18 Bug Workarounds** - Built-in fixes for known platform issues
 
 ## Requirements
 
@@ -62,29 +69,6 @@ let splitView = NavigableSplitViewController(
 navigationController.pushViewController(splitView, animated: true)
 ```
 
-### Advanced Configuration
-
-```swift
-// Access the underlying split view controller for advanced configuration
-splitView.splitVC.preferredDisplayMode = .oneBesideSecondary
-splitView.splitVC.preferredSplitBehavior = .tile
-
-// Access individual view controllers
-if let primaryVC = splitView.primaryViewController {
-    // Configure primary view controller
-}
-
-if let secondaryVC = splitView.secondaryViewController {
-    // Configure secondary view controller
-}
-
-// iOS 26+ Inspector support
-if #available(iOS 26.0, *) {
-    let inspectorVC = YourInspectorViewController()
-    splitView.splitVC.setViewController(inspectorVC, for: .inspector)
-}
-```
-
 ### Navigation Integration
 
 The component automatically handles navigation bar management:
@@ -100,7 +84,7 @@ The component automatically handles navigation bar management:
 
 - **`NavigableSplitViewController`** - Main wrapper class that makes split views navigable
 - **`CustomUISplitViewController`** - Internal subclass with enhanced delegate handling and iOS 18 bug fixes
-- **`SplitViewControllerColumnProviding`** - Protocol for view controllers that need column awareness
+- **`SplitViewControllerColumnProviding`** - Protocol for the primary view controller, provides column awareness on compact
 
 ### Key Concepts
 
@@ -147,13 +131,6 @@ var displayMode: UISplitViewController.DisplayMode { get }
 var isCompact: Bool { get }
 ```
 
-#### iOS 26+ Properties
-
-```swift
-@available(iOS 26.0, *)
-var inspectorViewController: UIViewController? { get }
-```
-
 ### SplitViewControllerColumnProviding
 
 ```swift
@@ -163,52 +140,6 @@ protocol SplitViewControllerColumnProviding: UIViewController {
 ```
 
 Implement this protocol in view controllers that need to know which column they represent.
-
-## Best Practices
-
-### 1. Navigation Hierarchy Planning
-
-```swift
-// ✅ Good: Clear hierarchy
-NavigationController
-├── RootViewController
-├── ListViewController
-└── NavigableSplitViewController
-    ├── PrimaryViewController
-    └── SecondaryViewController
-```
-
-### 2. Responsive Design
-
-```swift
-// Handle different display modes
-switch splitView.displayMode {
-case .oneBesideSecondary:
-    // Both panes visible
-case .oneOverSecondary:
-    // Overlay mode
-case .automatic:
-    // System-determined
-}
-```
-
-### 3. Memory Management
-
-```swift
-// The wrapper automatically manages child view controllers
-// No manual cleanup required when popping from navigation stack
-```
-
-### 4. Inspector Usage (iOS 26+)
-
-```swift
-// Show inspector with proper error handling
-if #available(iOS 26.0, *) {
-    let inspectorVC = InspectorViewController()
-    splitView.splitVC.setViewController(inspectorVC, for: .inspector)
-    splitView.splitVC.show(.inspector)
-}
-```
 
 ## Platform Considerations
 
@@ -226,25 +157,9 @@ The library includes automatic workarounds for known iOS 18 issues:
 - **Enhanced split behaviors**: Additional display modes and configurations
 - **Improved adaptive layouts**: Better handling of size class transitions
 
-## Troubleshooting
-
-### Common Issues
-
-**Q: Split view doesn't appear correctly in compact mode**
-A: The component includes automatic workarounds for iOS platform bugs. Ensure you're using the latest version.
-
-**Q: Back navigation doesn't work as expected**
-A: Ensure your primary view controller doesn't have conflicting navigation items. The wrapper handles back button mirroring automatically.
-
-**Q: Navigation bar appears when it shouldn't**
-A: The component manages navigation bar visibility automatically. Avoid manual navigation bar modifications within the split view hierarchy.
-
-**Q: Inspector doesn't show in compact mode**
-A: Inspector views are only available in regular size classes. The component automatically handles this limitation.
-
 ## Contributing
 
-We welcome contributions! Please follow these guidelines:
+I welcome contributions! Please follow these guidelines:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
