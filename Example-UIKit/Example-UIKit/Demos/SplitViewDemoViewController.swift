@@ -42,6 +42,13 @@ class SplitViewDemoViewController: UIViewController {
     ),
   ]
 
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    if let indexPath = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: indexPath, animated: animated)
+    }
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
@@ -133,7 +140,7 @@ extension SplitViewDemoViewController: UITableViewDataSource {
 extension SplitViewDemoViewController: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
+    guard navigationController?.topViewController == self else { return }
     let demoItem = demoItems[indexPath.row]
     demoItem.action()
   }

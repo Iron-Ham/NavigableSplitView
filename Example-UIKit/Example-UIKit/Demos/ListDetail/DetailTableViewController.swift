@@ -165,8 +165,6 @@ class DetailTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-
     switch indexPath.section {
     case 2:
       switch indexPath.row {
