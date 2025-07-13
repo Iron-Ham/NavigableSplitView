@@ -6,7 +6,12 @@ class DetailTableViewController: UITableViewController {
 
   private var selectedItem: String = "Select an item"
   private var detailItems: [String] = []
-  var inspectorButton: UIBarButtonItem!
+  lazy var inspectorButton = UIBarButtonItem(
+    image: UIImage(systemName: "sidebar.right"),
+    style: .plain,
+    target: self,
+    action: #selector(showInspector)
+  )
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -55,12 +60,6 @@ class DetailTableViewController: UITableViewController {
   }
 
   private func setupNavigationBar() {
-    inspectorButton = UIBarButtonItem(
-      image: UIImage(systemName: "sidebar.right"),
-      style: .plain,
-      target: self,
-      action: #selector(showInspector)
-    )
     navigationItem.rightBarButtonItem = inspectorButton
     updateInspectorButtonVisibility()
   }

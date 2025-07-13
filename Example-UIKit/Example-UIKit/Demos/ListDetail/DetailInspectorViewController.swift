@@ -65,7 +65,9 @@ class DetailInspectorViewController: UIViewController {
 
   private func updateContent() {
     // Clear existing content
-    contentStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    for view in contentStackView.arrangedSubviews {
+      view.removeFromSuperview()
+    }
 
     // Header
     let headerView = createHeaderView()

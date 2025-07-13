@@ -68,12 +68,10 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let selectedItem = items[indexPath.row]
 
-    // Create a detail view controller for this selection
     let detailVC = DetailTableViewController(style: .insetGrouped)
     detailVC.configure(with: selectedItem)
 
-    // Show the detail view controller
-    if let splitViewController = self.splitViewController {
+    if let splitViewController {
       splitViewController.showDetailViewController(detailVC, sender: self)
     }
   }
