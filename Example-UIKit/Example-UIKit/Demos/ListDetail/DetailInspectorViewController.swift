@@ -2,12 +2,18 @@ import NavigableSplitView
 import SnapKit
 import UIKit
 
+protocol DetailInspectorViewControllerDelegate: AnyObject {
+  func didDismissInspector()
+}
+
 @available(iOS 26.0, *)
 class DetailInspectorViewController: UIViewController {
 
   private var currentItem: String = ""
   private let scrollView = UIScrollView()
   private let contentStackView = UIStackView()
+
+  weak var delegate: DetailInspectorViewControllerDelegate?
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -48,13 +54,14 @@ class DetailInspectorViewController: UIViewController {
   }
 
   @objc private func dismissInspector() {
-    guard let splitViewController else { return }
-    splitViewController.setViewController(nil, for: .inspector)
-    splitViewController.hide(.inspector)
-    if let detailVC = splitViewController.viewController(for: .secondary)
-      as? DetailTableViewController
-    {
-      detailVC.inspectorButton.isHidden = false
+    defer {
+      delegate?.didDismissInspector()
+    }
+    if let splitViewController {
+      splitViewController.setViewController(nil, for: .inspector)
+      splitViewController.hide(.inspector)
+    } else {
+      dismiss(animated: true)
     }
   }
 

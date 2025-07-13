@@ -18,6 +18,10 @@ class DetailTableViewController: UITableViewController {
     setupUI()
     setupDetailItems()
     setupNavigationBar()
+    inspectorButton.isHidden = selectedItem == "Select an item"
+    registerForTraitChanges([UITraitHorizontalSizeClass.self]) { (self: Self, previousTraitCollection: UITraitCollection) in
+      self.setupNavigationBar()
+    }
   }
 
   private func setupUI() {
@@ -60,6 +64,17 @@ class DetailTableViewController: UITableViewController {
   }
 
   private func setupNavigationBar() {
+    let image = if self.traitCollection.horizontalSizeClass == .compact {
+      UIImage(systemName: "info.circle")
+    } else {
+      UIImage(systemName: "sidebar.right")
+    }
+    self.inspectorButton = UIBarButtonItem(
+      image: image,
+      style: .plain,
+      target: self,
+      action: #selector(self.showInspector)
+    )
     navigationItem.rightBarButtonItem = inspectorButton
     updateInspectorButtonVisibility()
   }
@@ -67,8 +82,8 @@ class DetailTableViewController: UITableViewController {
   func updateInspectorButtonVisibility() {
     if #available(iOS 26.0, *), let splitViewController {
       inspectorButton.isHidden = splitViewController.isShowing(.inspector)
-    } else {
-      inspectorButton.isHidden = true
+    } else if traitCollection.horizontalSizeClass == .compact, let tabBarController {
+      inspectorButton.isHidden = tabBarController.presentedViewController != nil
     }
   }
 
@@ -78,6 +93,7 @@ class DetailTableViewController: UITableViewController {
     else { return }
 
     let inspectorVC = DetailInspectorViewController()
+    inspectorVC.delegate = self
     inspectorVC.configure(for: selectedItem)
     splitViewController?.setViewController(inspectorVC, for: .inspector)
     splitViewController?.show(.inspector)
@@ -214,6 +230,12 @@ class DetailTableViewController: UITableViewController {
     default:
       "Unknown"
     }
+  }
+}
+
+extension DetailTableViewController: DetailInspectorViewControllerDelegate {
+  func didDismissInspector() {
+    inspectorButton.isHidden = false
   }
 }
 
