@@ -36,7 +36,7 @@ class AboutViewController: UIViewController {
     ]),
     .developer,
     .links([
-      ("GitHub Repository", "link.circle.fill", "https://github.com/example/navigablesplitview"),
+      ("GitHub Repository", "link.circle.fill", "https://github.com/Iron-Ham/NavigableSplitView/"),
       ("Documentation", "book.circle.fill", "https://docs.example.com/navigablesplitview"),
       ("API Reference", "doc.text.fill", "https://api.example.com/navigablesplitview"),
       (
