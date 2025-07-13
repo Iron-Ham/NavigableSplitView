@@ -1,9 +1,5 @@
 import UIKit
 
-public protocol SplitViewControllerColumnProviding: UIViewController {
-  var column: UISplitViewController.Column { get }
-}
-
 /// A wrapper that allows a `UISplitViewController` to be pushed onto an existing navigation hierarchy.
 ///
 /// This class enables seamless integration of split view controllers into navigation stacks
@@ -162,7 +158,7 @@ public class NavigableSplitViewController: UIViewController {
   /// - Parameter animated: Whether the appearance was animated
   public override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    if let deferredSecondaryViewController, splitViewControllerColumnProviding?.column == .secondary {
+    if let deferredSecondaryViewController, splitViewControllerColumnProviding?.preferredCompactColumn == .secondary {
       DispatchQueue.main.async {
         self.splitVC.showDetailViewController(deferredSecondaryViewController, sender: nil)
       }
@@ -249,6 +245,6 @@ extension NavigableSplitViewController: UISplitViewControllerDelegate {
     _ svc: UISplitViewController,
     topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column
   ) -> UISplitViewController.Column {
-    splitViewControllerColumnProviding?.column ?? .secondary
+    splitViewControllerColumnProviding?.preferredCompactColumn ?? .secondary
   }
 }

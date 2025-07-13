@@ -42,7 +42,7 @@ class BasicPrimaryViewController: UIViewController {
 }
 
 extension BasicPrimaryViewController: SplitViewControllerColumnProviding {
-  var column: UISplitViewController.Column { .secondary }
+  var preferredCompactColumn: UISplitViewController.Column { .secondary }
 }
 
 class BasicSecondaryViewController: UIViewController {
