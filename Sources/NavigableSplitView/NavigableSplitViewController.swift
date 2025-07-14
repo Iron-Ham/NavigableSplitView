@@ -132,8 +132,7 @@ public class NavigableSplitViewController: UIViewController {
       splitVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       splitVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
     ])
-    title = "Split View"
-
+    title = secondaryViewController?.title ?? primaryViewController?.title
     setupBackButtonMirroring()
   }
 
