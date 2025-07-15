@@ -83,7 +83,6 @@ protocol SidebarContentDelegate: AnyObject {
 enum SidebarItem: String, CaseIterable {
     case home = "Home"
     case splitViewDemo = "Split View Demo"
-    case about = "About"
 }
 
 class SidebarContentViewController: UIViewController, UICollectionViewDelegate {
@@ -151,9 +150,6 @@ extension SideBarViewController: SidebarContentDelegate {
             detailVC = UINavigationController(rootViewController: HomeViewController())
         case .splitViewDemo:
             detailVC = UINavigationController(rootViewController: SplitViewDemoViewController())
-        case .about:
-            // You can replace this with your AboutViewController
-            detailVC = createDetailViewController(title: "About", message: "About this application")
         }
 
         _splitViewController.setViewController(detailVC, for: .secondary)
