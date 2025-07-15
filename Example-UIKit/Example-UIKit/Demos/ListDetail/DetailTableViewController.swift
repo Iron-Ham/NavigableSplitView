@@ -19,9 +19,13 @@ class DetailTableViewController: UITableViewController {
     setupDetailItems()
     setupNavigationBar()
     inspectorButton.isHidden = selectedItem == "Select an item"
-    registerForTraitChanges([UITraitHorizontalSizeClass.self]) { (self: Self, previousTraitCollection: UITraitCollection) in
-      self.setupNavigationBar()
-    }
+      if #available(iOS 17.0, *) {
+          registerForTraitChanges([UITraitHorizontalSizeClass.self]) { (self: Self, previousTraitCollection: UITraitCollection) in
+              self.setupNavigationBar()
+          }
+      } else {
+          // Fallback on earlier versions
+      }
   }
 
   private func setupUI() {
