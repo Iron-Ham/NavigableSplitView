@@ -66,14 +66,12 @@ fastlane/test_output
 
 # Generated code
 .xcodegen-cache
-*.xcodeproj/
 project-generated.yml
 .project-generated.yml
 Pods/
 vendor/
 tmp/
 .ruby-version
-Modules/GitHub/Tests/PasteboardExtractorTests.swift.plist
 mkmf.log
 
 xcodebuild.log
