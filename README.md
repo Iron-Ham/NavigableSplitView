@@ -8,10 +8,56 @@ A powerful UIKit component that enables seamless integration of split view contr
 
 ### Video Examples
 
-- [iPadOS 18](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPadOS18.mov)
-- [iPadOS 26](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPadOS26.mov)
-- [iOS 18](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPhone18.mov)
-- [iOS 26](https://github.com/Iron-Ham/NavigableSplitView/blob/main/Sample-Videos/iPhone26.mov)
+<details><summary>iPad</summary>
+<p>
+
+
+<details><summary>iPadOS 26</summary>
+<p>
+
+https://github.com/user-attachments/assets/f7dfe227-29e7-45d3-9bd1-9a032e214ee2
+
+
+</p>
+</details> 
+
+<details><summary>iPadOS 18</summary>
+<p>
+
+https://github.com/user-attachments/assets/8980f207-613f-4ddf-8465-8ae1b2f9888a
+
+
+</p>
+</details> 
+
+</p>
+</details> 
+
+
+<details><summary>iPhone</summary>
+<p>
+
+<details><summary>iOS 26</summary>
+<p>
+
+https://github.com/user-attachments/assets/e93a7a3f-1ca5-46c0-9d9e-e8123b3f7d2d
+
+
+</p>
+</details> 
+
+<details><summary>iOS 18</summary>
+<p>
+
+https://github.com/user-attachments/assets/538c76b9-0a23-4a23-8434-3dbb05f7abfa
+
+
+</p>
+</details> 
+
+</p>
+</details> 
+
 
 ## Features
 
