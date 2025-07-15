@@ -89,11 +89,18 @@ class HomeViewController: UIViewController {
   }
 
   @objc private func getStartedTapped() {
-    // Switch to the Split View Demo tab
-    if let tabBarController = tabBarController {
-      tabBarController.selectedIndex = 1  // Split View Demo tab
+        // Switch to the Split View Demo tab
+        if let tabBarController {
+            tabBarController.selectedIndex = 1 // Split View Demo tab
+        }
+
+        // On older OS
+        else if let viewController = self.splitViewController?
+            .viewController(for: .primary) as? SidebarContentViewController
+        {
+            viewController.selectDemo()
+        }
     }
-  }
 }
 
 // MARK: - UITableViewDataSource

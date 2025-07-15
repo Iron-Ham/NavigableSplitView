@@ -1,5 +1,6 @@
 import UIKit
 
+@available(iOS 18.0, *)
 class MainTabBarController: UITabBarController {
 
   override func viewDidLoad() {
@@ -201,6 +202,7 @@ class MainTabBarController: UITabBarController {
 
 // MARK: - UITabBarControllerDelegate
 
+@available(iOS 18.0, *)
 extension MainTabBarController: UITabBarControllerDelegate {
 
   func tabBarController(
