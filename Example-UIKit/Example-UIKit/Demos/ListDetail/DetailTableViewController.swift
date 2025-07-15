@@ -64,10 +64,10 @@ class DetailTableViewController: UITableViewController {
   }
 
   private func setupNavigationBar() {
-    let image = if self.traitCollection.horizontalSizeClass == .compact {
-      UIImage(systemName: "info.circle")
-    } else {
+    let image = if #available(iOS 26.0, *), traitCollection.horizontalSizeClass == .regular {
       UIImage(systemName: "sidebar.right")
+    } else {
+      UIImage(systemName: "info.circle")
     }
     self.inspectorButton = UIBarButtonItem(
       image: image,
@@ -88,16 +88,20 @@ class DetailTableViewController: UITableViewController {
   }
 
   @objc private func showInspector() {
-    guard #available(iOS 26.0, *),
-      selectedItem != "Select an item"
-    else { return }
+    guard selectedItem != "Select an item" else { return }
 
     let inspectorVC = DetailInspectorViewController()
     inspectorVC.delegate = self
     inspectorVC.configure(for: selectedItem)
-    splitViewController?.setViewController(inspectorVC, for: .inspector)
-    splitViewController?.show(.inspector)
-    inspectorButton.isHidden = true
+    if #available(iOS 26.0, *) {
+      splitViewController?.setViewController(inspectorVC, for: .inspector)
+      splitViewController?.show(.inspector)
+      inspectorButton.isHidden = true
+    } else {
+      let nav = UINavigationController(rootViewController: inspectorVC)
+      nav.modalPresentationStyle = .formSheet
+      present(nav, animated: true)
+    }
   }
 
   // MARK: - Table view data source
