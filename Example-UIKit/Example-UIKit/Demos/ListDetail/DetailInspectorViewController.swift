@@ -6,7 +6,6 @@ protocol DetailInspectorViewControllerDelegate: AnyObject {
   func didDismissInspector()
 }
 
-@available(iOS 26.0, *)
 class DetailInspectorViewController: UIViewController {
 
   private var currentItem: String = ""
@@ -57,8 +56,7 @@ class DetailInspectorViewController: UIViewController {
     defer {
       delegate?.didDismissInspector()
     }
-    if let splitViewController {
-      splitViewController.setViewController(nil, for: .inspector)
+    if #available(iOS 26.0, *), let splitViewController {
       splitViewController.hide(.inspector)
     } else {
       dismiss(animated: true)
