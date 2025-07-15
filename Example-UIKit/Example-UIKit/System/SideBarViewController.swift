@@ -46,12 +46,12 @@ class SideBarViewController: UIViewController, UICollectionViewDelegate {
         ])
         _splitViewController.didMove(toParent: self)
     }
-    
+
     private func createPrimaryViewController() -> UIViewController {
         // Create the actual sidebar with collection view
         let sidebarVC = SidebarContentViewController()
         sidebarVC.delegate = self
-        return UINavigationController(rootViewController: sidebarVC)
+        return sidebarVC
     }
     
     private func createSecondaryViewController() -> UIViewController {
@@ -96,6 +96,10 @@ class SidebarContentViewController: UIViewController, UICollectionViewDelegate {
         navigationItem.title = "Menu"
         configureHierarchy()
         configureDataSource()
+    }
+
+    public func selectDemo() {
+        delegate?.didSelectSidebarItem(.splitViewDemo)
     }
 
     private func configureHierarchy() {
@@ -144,18 +148,15 @@ extension SideBarViewController: SidebarContentDelegate {
         
         switch item {
         case .home:
-            // You can replace this with your HomeViewController
-            detailVC = createDetailViewController(title: "Home", message: "Welcome to the Home section")
+            detailVC = UINavigationController(rootViewController: HomeViewController())
         case .splitViewDemo:
-            // You can replace this with your SplitViewDemoViewController
-            detailVC = createDetailViewController(title: "Split View Demo", message: "This is the Split View Demo section")
+            detailVC = UINavigationController(rootViewController: SplitViewDemoViewController())
         case .about:
             // You can replace this with your AboutViewController
             detailVC = createDetailViewController(title: "About", message: "About this application")
         }
-        
-        let navigationController = UINavigationController(rootViewController: detailVC)
-        _splitViewController.setViewController(navigationController, for: .secondary)
+
+        _splitViewController.setViewController(detailVC, for: .secondary)
     }
     
     private func createDetailViewController(title: String, message: String) -> UIViewController {
