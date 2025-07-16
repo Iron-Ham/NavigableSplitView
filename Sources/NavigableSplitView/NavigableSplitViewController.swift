@@ -51,7 +51,6 @@ open class NavigableSplitViewController: UIViewController {
     splitVC.displayMode
   }
 
-  private var deferredSecondaryViewController: UIViewController?
   /// Flag to track if the view controller has fully appeared and is ready for split view operations
   internal var isReadyForSplitViewOperations = false
 
@@ -99,7 +98,13 @@ open class NavigableSplitViewController: UIViewController {
     // logging loop, which consumes all system resources. This only applies in compact mode.
     // https://developer.apple.com/forums/thread/792740#792740021
     if #available(iOS 26.0, *), traitCollection.horizontalSizeClass == .compact {
-      self.deferredSecondaryViewController = secondary
+      deferredOperations.append { [weak self] in
+        guard let self,
+          let splitViewControllerColumnProviding,
+          splitViewControllerColumnProviding.preferredCompactColumn == .secondary
+        else { return }
+        self.splitVC.showDetailViewController(secondary, sender: nil)
+      }
     } else {
       splitVC.setViewController(secondary, for: .secondary)
     }
@@ -173,14 +178,6 @@ open class NavigableSplitViewController: UIViewController {
 
     // Mark as ready for split view operations
     isReadyForSplitViewOperations = true
-
-    if let deferredSecondaryViewController,
-      splitViewControllerColumnProviding?.preferredCompactColumn == .secondary
-    {
-      DispatchQueue.main.async {
-        self.splitVC.showDetailViewController(deferredSecondaryViewController, sender: nil)
-      }
-    }
 
     // Process any deferred operations
     DispatchQueue.main.async {
