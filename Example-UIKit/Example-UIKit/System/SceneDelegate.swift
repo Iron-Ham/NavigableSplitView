@@ -14,7 +14,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     window?.makeKeyAndVisible()
   }
 }
-
-private class SidebarViewController2: NavigableSplitViewController {
-  
-}
