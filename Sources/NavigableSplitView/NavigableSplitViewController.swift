@@ -6,7 +6,7 @@ import UIKit
 /// by wrapping the split view functionality in a standard `UIViewController` that can be
 /// pushed and popped like any other view controller. It handles navigation bar management
 /// and provides automatic back button mirroring to maintain consistent navigation behavior.
-public class NavigableSplitViewController: UIViewController {
+open class NavigableSplitViewController: UIViewController {
 
   /// The primary view controller displayed in the split view.
   ///
@@ -106,7 +106,7 @@ public class NavigableSplitViewController: UIViewController {
   }
 
   @available(*, unavailable)
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 

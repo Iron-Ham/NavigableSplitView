@@ -1,6 +1,5 @@
 import UIKit
 
-@available(iOS 18.0, *)
 class MainTabBarController: UITabBarController {
 
   override func viewDidLoad() {
@@ -11,10 +10,23 @@ class MainTabBarController: UITabBarController {
 
     setupTabs()
     configureTabBarAppearance()
-    configureSidebar()
+    
+    // Only configure sidebar for iOS 18+
+    if #available(iOS 18.0, *) {
+      configureSidebar()
+    }
   }
 
   private func setupTabs() {
+    if #available(iOS 18.0, *) {
+      setupTabsModern()
+    } else {
+      setupTabsLegacy()
+    }
+  }
+
+  @available(iOS 18.0, *)
+  private func setupTabsModern() {
     let homeTab = UITab(
       title: "Home",
       image: UIImage(systemName: "house"),
@@ -96,19 +108,86 @@ class MainTabBarController: UITabBarController {
     ]
   }
 
+  private func setupTabsLegacy() {
+    let homeNavController = UINavigationController(rootViewController: HomeViewController())
+    homeNavController.navigationBar.prefersLargeTitles = true
+    homeNavController.tabBarItem = UITabBarItem(
+      title: "Home",
+      image: UIImage(systemName: "house"),
+      tag: 0
+    )
+
+    let splitViewDemoNavController = UINavigationController(rootViewController: SplitViewDemoViewController())
+    splitViewDemoNavController.navigationBar.prefersLargeTitles = true
+    splitViewDemoNavController.tabBarItem = UITabBarItem(
+      title: "Split View Demos",
+      image: UIImage(systemName: "rectangle.split.2x1"),
+      tag: 1
+    )
+
+    let aboutNavController = UINavigationController(rootViewController: AboutViewController())
+    aboutNavController.navigationBar.prefersLargeTitles = true
+    aboutNavController.tabBarItem = UITabBarItem(
+      title: "About",
+      image: UIImage(systemName: "info.circle"),
+      tag: 2
+    )
+
+    let settingsNavController = UINavigationController(rootViewController: createSettingsViewController())
+    settingsNavController.navigationBar.prefersLargeTitles = true
+    settingsNavController.tabBarItem = UITabBarItem(
+      title: "Settings",
+      image: UIImage(systemName: "gear"),
+      tag: 3
+    )
+
+    let documentsNavController = UINavigationController(rootViewController: createDocumentsViewController())
+    documentsNavController.navigationBar.prefersLargeTitles = true
+    documentsNavController.tabBarItem = UITabBarItem(
+      title: "Documents",
+      image: UIImage(systemName: "doc.text"),
+      tag: 4
+    )
+
+    let favoritesNavController = UINavigationController(rootViewController: createFavoritesViewController())
+    favoritesNavController.navigationBar.prefersLargeTitles = true
+    favoritesNavController.tabBarItem = UITabBarItem(
+      title: "Favorites",
+      image: UIImage(systemName: "heart"),
+      tag: 5
+    )
+
+    let projectsNavController = UINavigationController(rootViewController: createProjectsViewController())
+    projectsNavController.navigationBar.prefersLargeTitles = true
+    projectsNavController.tabBarItem = UITabBarItem(
+      title: "Projects",
+      image: UIImage(systemName: "folder"),
+      tag: 6
+    )
+
+    // Set all view controllers
+    viewControllers = [
+      homeNavController,
+      splitViewDemoNavController,
+      aboutNavController,
+      settingsNavController,
+      documentsNavController,
+      favoritesNavController,
+      projectsNavController
+    ]
+  }
+
   private func configureTabBarAppearance() {
     let appearance = UITabBarAppearance()
     appearance.configureWithOpaqueBackground()
     appearance.backgroundColor = .systemBackground
 
     tabBar.standardAppearance = appearance
-    if #available(iOS 15.0, *) {
-      tabBar.scrollEdgeAppearance = appearance
-    }
-
+    tabBar.scrollEdgeAppearance = appearance
     tabBar.tintColor = .systemBlue
   }
 
+  @available(iOS 18.0, *)
   private func configureSidebar() {
     // Enable sidebar mode
     mode = .tabSidebar
@@ -202,7 +281,6 @@ class MainTabBarController: UITabBarController {
 
 // MARK: - UITabBarControllerDelegate
 
-@available(iOS 18.0, *)
 extension MainTabBarController: UITabBarControllerDelegate {
 
   func tabBarController(
@@ -223,7 +301,8 @@ extension MainTabBarController: UITabBarControllerDelegate {
     }
   }
 
-  // Called when the user interacts with the sidebar
+  // Called when the user interacts with the sidebar (iOS 18+ only)
+  @available(iOS 18.0, *)
   func tabBarController(
     _ tabBarController: UITabBarController, sidebar: UITabBarController.Sidebar,
     didSelectTab tab: UITab

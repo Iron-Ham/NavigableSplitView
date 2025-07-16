@@ -89,18 +89,11 @@ class HomeViewController: UIViewController {
   }
 
   @objc private func getStartedTapped() {
-        // Switch to the Split View Demo tab
-        if let tabBarController {
-            tabBarController.selectedIndex = 1 // Split View Demo tab
-        }
-
-        // On older OS
-        else if let viewController = self.splitViewController?
-            .viewController(for: .primary) as? SidebarContentViewController
-        {
-            viewController.selectDemo()
-        }
+    if let tabBarController {
+      // Ideally, done via `selectedTab`, but for now…
+      tabBarController.selectedIndex = 1
     }
+  }
 }
 
 // MARK: - UITableViewDataSource
@@ -131,22 +124,28 @@ extension HomeViewController: UITableViewDataSource {
     switch sectionType {
     case .hero:
       let cell =
-        tableView.dequeueReusableCell(withIdentifier: "HeroCell", for: indexPath)
-        as! HeroTableViewCell
+        tableView.dequeueReusableCell(
+          withIdentifier: "HeroCell",
+          for: indexPath
+        ) as! HeroTableViewCell
       return cell
 
     case .features:
       let cell =
-        tableView.dequeueReusableCell(withIdentifier: "FeatureCell", for: indexPath)
-        as! FeatureTableViewCell
+        tableView.dequeueReusableCell(
+          withIdentifier: "FeatureCell",
+          for: indexPath
+        ) as! FeatureTableViewCell
       let feature = FeatureItem.allCases[indexPath.row]
       cell.configure(icon: feature.icon, title: feature.title, description: feature.description)
       return cell
 
     case .getStarted:
       let cell =
-        tableView.dequeueReusableCell(withIdentifier: "GetStartedCell", for: indexPath)
-        as! GetStartedTableViewCell
+        tableView.dequeueReusableCell(
+          withIdentifier: "GetStartedCell",
+          for: indexPath
+        ) as! GetStartedTableViewCell
       cell.onButtonTapped = { [weak self] in
         self?.getStartedTapped()
       }

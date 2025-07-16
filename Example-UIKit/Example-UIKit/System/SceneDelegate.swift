@@ -1,10 +1,4 @@
-//
-//  SceneDelegate.swift
-//  Example-UIKit
-//
-//  Created by Hesham Salman on 7/11/25.
-//
-
+import NavigableSplitView
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -16,11 +10,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   ) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     window = UIWindow(windowScene: windowScene)
-      if #available(iOS 18.0, *) {
-          window?.rootViewController = MainTabBarController()
-      } else {
-          window?.rootViewController = SideBarViewController()
-      }
+    window?.rootViewController = MainTabBarController()
     window?.makeKeyAndVisible()
   }
 }
