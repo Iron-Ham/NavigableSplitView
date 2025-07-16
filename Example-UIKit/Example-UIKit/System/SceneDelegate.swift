@@ -10,11 +10,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   ) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     window = UIWindow(windowScene: windowScene)
-      if #available(iOS 18.0, *) {
-          window?.rootViewController = MainTabBarController()
-      } else {
-          window?.rootViewController = NavigableSplitViewController(primary: SidebarContentViewController(), secondary: UIViewController())
-      }
+    window?.rootViewController = MainTabBarController()
     window?.makeKeyAndVisible()
   }
 }

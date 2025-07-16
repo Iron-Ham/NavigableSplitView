@@ -92,10 +92,6 @@ class HomeViewController: UIViewController {
     if let tabBarController {
       // Ideally, done via `selectedTab`, but for now…
       tabBarController.selectedIndex = 1
-    } else if let viewController = splitViewController?.viewController(for: .primary),
-      let sidebarViewController = viewController as? SidebarContentViewController
-    {
-      sidebarViewController.selectDemo()
     }
   }
 }
