@@ -102,10 +102,7 @@ class MainTabBarController: UITabBarController {
     appearance.backgroundColor = .systemBackground
 
     tabBar.standardAppearance = appearance
-    if #available(iOS 15.0, *) {
-      tabBar.scrollEdgeAppearance = appearance
-    }
-
+    tabBar.scrollEdgeAppearance = appearance
     tabBar.tintColor = .systemBlue
   }
 
