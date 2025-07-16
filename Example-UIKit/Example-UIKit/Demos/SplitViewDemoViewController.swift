@@ -1,10 +1,3 @@
-//
-//  SplitViewDemoViewController.swift
-//  Example-UIKit
-//
-//  Created by Hesham Salman on 7/11/25.
-//
-
 import NavigableSplitView
 import SnapKit
 import UIKit
