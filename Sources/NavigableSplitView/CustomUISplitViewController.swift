@@ -19,6 +19,12 @@ class CustomUISplitViewController: UISplitViewController {
     let handled = delegate?.splitViewController?(self, showDetail: vc, sender: sender) ?? false
 
     if !handled {
+      // While iOS 16-18 produce a warning in the logs that this call does nothing in `DoubleColumn`
+      // style `UISplitView`, neglecting to call this will never show a view in the detail column.
+      //
+      // Notably, iOS 26 does not produce such a warning – and the documentation clearly states that
+      // this function *must* be implemented for all container views, which includes
+      // `UISplitViewController`.
       super.showDetailViewController(vc, sender: sender)
     }
   }
