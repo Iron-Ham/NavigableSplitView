@@ -10,7 +10,7 @@ open class NavigableSplitViewController: UIViewController {
 
   /// The primary view controller displayed in the split view.
   ///
-  /// This is typically the master or sidebar view controller in a split view layout.
+  /// This is typically the main or sidebar view controller in a split view layout.
   /// Returns `nil` if no primary view controller is set.
   public var primaryViewController: UIViewController? {
     splitVC.viewController(for: .primary)
@@ -57,8 +57,7 @@ open class NavigableSplitViewController: UIViewController {
 
   private var primaryNavHasBackStack: Bool {
     if let primaryNavController = primaryViewController as? UINavigationController,
-      primaryNavController.viewControllers.count > 1
-    {
+      primaryNavController.viewControllers.count > 1 {
       true
     } else {
       false
@@ -103,7 +102,7 @@ open class NavigableSplitViewController: UIViewController {
           let splitViewControllerColumnProviding,
           splitViewControllerColumnProviding.preferredCompactColumn == .secondary
         else { return }
-        self.splitVC.showDetailViewController(secondary, sender: nil)
+        splitVC.showDetailViewController(secondary, sender: nil)
       }
     } else {
       splitVC.setViewController(secondary, for: .secondary)
@@ -111,7 +110,7 @@ open class NavigableSplitViewController: UIViewController {
   }
 
   @available(*, unavailable)
-  required public init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
@@ -122,7 +121,7 @@ open class NavigableSplitViewController: UIViewController {
   /// Sets up the split view controller as a child view controller, configures
   /// layout constraints, sets the title, and initializes back button mirroring
   /// for navigation consistency.
-  open override func viewDidLoad() {
+    override open func viewDidLoad() {
     super.viewDidLoad()
 
     view.backgroundColor = .systemBackground
@@ -147,7 +146,7 @@ open class NavigableSplitViewController: UIViewController {
   /// split view experience without conflicting navigation elements.
   ///
   /// - Parameter animated: Whether the appearance should be animated
-  open override func viewWillAppear(_ animated: Bool) {
+  override open func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     navigationController?.setNavigationBarHidden(true, animated: false)
   }
@@ -159,7 +158,7 @@ open class NavigableSplitViewController: UIViewController {
   /// Also resets the readiness flag for split view operations.
   ///
   /// - Parameter animated: Whether the disappearance should be animated
-  open override func viewWillDisappear(_ animated: Bool) {
+  override open func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     navigationController?.setNavigationBarHidden(false, animated: false)
 
@@ -173,7 +172,7 @@ open class NavigableSplitViewController: UIViewController {
   /// This works around a beta bug where immediate setup causes infinite logging loops.
   ///
   /// - Parameter animated: Whether the appearance was animated
-  open override func viewDidAppear(_ animated: Bool) {
+  override open func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
 
     // Mark as ready for split view operations

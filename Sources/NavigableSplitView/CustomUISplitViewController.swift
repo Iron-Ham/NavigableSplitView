@@ -7,8 +7,7 @@ class CustomUISplitViewController: UISplitViewController {
   override func showDetailViewController(_ vc: UIViewController, sender: Any?) {
     // Check if the NavigableSplitViewController is ready for operations
     if let navigableSplitVC = navigableSplitViewController,
-      !navigableSplitVC.isReadyForSplitViewOperations
-    {
+      !navigableSplitVC.isReadyForSplitViewOperations {
       // Defer the operation until after viewDidAppear
       navigableSplitVC.deferredOperations.append {
         self.showDetailViewController(vc, sender: sender)
