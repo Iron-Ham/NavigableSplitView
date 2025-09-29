@@ -1,3 +1,4 @@
+import NavigableSplitView
 import UIKit
 
 class MainTabBarController: UITabBarController {
@@ -92,13 +93,19 @@ class MainTabBarController: UITabBarController {
     }
 
     let projectsTab = UITab(
-      title: "Projects",
+      title: "Top-level SplitView",
       image: UIImage(systemName: "folder"),
       identifier: "projects"
     ) { _ in
-      let projectsVC = self.createProjectsViewController()
-      let navController = UINavigationController(rootViewController: projectsVC)
-      navController.navigationBar.prefersLargeTitles = true
+      let listVC = ListViewController()
+      let detailVC = DetailTableViewController(style: .insetGrouped)
+
+      let splitViewController = NavigableSplitViewController(
+        primary: listVC,
+        secondary: detailVC
+      )
+      let navController = UINavigationController(rootViewController: splitViewController)
+      navController.navigationBar.prefersLargeTitles = false
       return navController
     }
 

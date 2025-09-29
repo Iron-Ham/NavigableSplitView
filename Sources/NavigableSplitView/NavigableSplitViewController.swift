@@ -123,7 +123,7 @@ open class NavigableSplitViewController: UIViewController {
   /// for navigation consistency.
     override open func viewDidLoad() {
     super.viewDidLoad()
-
+    navigationItem.largeTitleDisplayMode = .never
     view.backgroundColor = .systemBackground
     addChild(splitVC)
     view.addSubview(splitVC.view)
